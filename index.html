@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClaudeCode紹介 - ミーティング欠席のお詫び</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 謝罪セクション -->
+        <section class="apology-section">
+            <h1>ミーティングに参加できず申し訳ございませんでした</h1>
+            <div class="apology-content">
+                <p>先日のミーティングに参加できず、大変申し訳ございませんでした。</p>
+                <p>皆様の貴重なお時間をいただいていたにも関わらず、急な事情により欠席となってしまいました。</p>
+                <p>心よりお詫び申し上げます。</p>
+                <p>この場を借りて、今回ご紹介予定だった<strong>ClaudeCode</strong>について、以下にまとめさせていただきました。</p>
+            </div>
+            <button class="scroll-btn" onclick="scrollToFeatures()">ClaudeCodeの紹介を見る ↓</button>
+        </section>
+
+        <!-- ClaudeCode紹介セクション -->
+        <section class="features-section" id="features">
+            <h2>ClaudeCodeとは？</h2>
+            <p class="intro">ClaudeCodeは、Anthropic社が提供する強力なAIコーディングアシスタントツールです。</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>🚀 高速な開発支援</h3>
+                    <p>AIとの対話を通じて、コードの生成、修正、リファクタリングを効率的に実行できます。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>📁 ファイル操作</h3>
+                    <p>ファイルの読み取り、書き込み、編集、検索など、プロジェクト全体を横断的に操作可能です。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>🔍 強力な検索機能</h3>
+                    <p>GrepやGlobツールを使用して、大規模なコードベースでも素早く必要な情報を見つけられます。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>🛠️ タスク管理</h3>
+                    <p>TodoWriteツールで複雑なタスクを細分化し、進捗を可視化しながら開発を進められます。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>🌐 Web連携</h3>
+                    <p>WebFetchやWebSearchツールで、最新の情報を取得しながら開発を進められます。</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3>💻 マルチプラットフォーム</h3>
+                    <p>Windows、Mac、Linuxで動作し、様々な開発環境に対応しています。</p>
+                </div>
+            </div>
+
+            <div class="usage-section">
+                <h3>基本的な使い方</h3>
+                <div class="code-example">
+                    <pre><code>$ claude-code
+> ファイルを読んで内容を説明して
+> バグを修正して
+> 新しい機能を追加して</code></pre>
+                </div>
+                <p>自然な日本語で指示を出すだけで、AIが適切なツールを使って作業を実行します。</p>
+            </div>
+
+            <div class="benefits">
+                <h3>ClaudeCodeのメリット</h3>
+                <ul>
+                    <li>開発速度の大幅な向上</li>
+                    <li>コードレビューの自動化</li>
+                    <li>ドキュメント作成の効率化</li>
+                    <li>バグの早期発見と修正</li>
+                    <li>新しい技術の学習支援</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer>
+            <p>改めて、ミーティング欠席について深くお詫び申し上げます。</p>
+            <p>ご不明な点がございましたら、お気軽にお問い合わせください。</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
