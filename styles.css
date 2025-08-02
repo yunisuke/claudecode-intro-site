@@ -55,18 +55,19 @@ body {
 }
 
 .example-card {
-    background: white;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
     padding: 35px;
     border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.1);
-    border: 2px solid transparent;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+    border: 1px solid rgba(102, 126, 234, 0.1);
     transition: all 0.3s ease;
 }
 
 .example-card:hover {
     border-color: #667eea;
     transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.25);
+    background: linear-gradient(135deg, #e9ecef 0%, #b8c6db 100%);
 }
 
 .example-card h4 {
