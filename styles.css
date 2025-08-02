@@ -169,6 +169,23 @@ body {
     transform: translateX(5px);
 }
 
+/* サンプルリンク */
+.sample-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #48bb78;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.sample-link:hover {
+    background-color: #38a169;
+    transform: translateX(5px);
+}
+
 /* 詳細セクション */
 .detail-section {
     background-color: #f8f9fa;
@@ -208,6 +225,13 @@ body {
     color: #666;
     font-size: 1.1rem;
     line-height: 1.8;
+    margin-bottom: 30px;
+}
+
+.detail-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
 /* レスポンシブ対応 */

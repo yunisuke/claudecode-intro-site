@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Codeマスター講座 - 最先端AI開発を学ぶ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Noto Sans JP', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'gradient-xy': 'gradient-xy 15s ease infinite',
+                        'gradient-slow': 'gradient-slow 20s ease infinite',
+                        'fade-in': 'fade-in 0.8s ease-out forwards',
+                        'slide-up': 'slide-up 0.6s ease-out forwards',
+                        'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'typing': 'typing 3.5s steps(30, end), blink-caret 0.5s step-end infinite',
+                        'scale-in': 'scale-in 0.5s ease-out forwards',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        'gradient-xy': {
+                            '0%, 100%': {
+                                'background-size': '400% 400%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            }
+                        },
+                        'gradient-slow': {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '300% 300%',
+                                'background-position': 'right center'
+                            }
+                        },
+                        'fade-in': {
+                            '0%': {
+                                opacity: '0',
+                                transform: 'translateY(30px)'
+                            },
+                            '100%': {
+                                opacity: '1',
+                                transform: 'translateY(0)'
+                            }
+                        },
+                        'slide-up': {
+                            '0%': {
+                                opacity: '0',
+                                transform: 'translateY(50px)'
+                            },
+                            '100%': {
+                                opacity: '1',
+                                transform: 'translateY(0)'
+                            }
+                        },
+                        'pulse-glow': {
+                            '0%, 100%': {
+                                opacity: '0.4',
+                                transform: 'scale(1)',
+                                filter: 'blur(20px)'
+                            },
+                            '50%': {
+                                opacity: '0.8',
+                                transform: 'scale(1.2)',
+                                filter: 'blur(15px)'
+                            }
+                        },
+                        'float': {
+                            '0%, 100%': {
+                                transform: 'translateY(0px)'
+                            },
+                            '50%': {
+                                transform: 'translateY(-20px)'
+                            }
+                        },
+                        'typing': {
+                            '0%': {
+                                width: '0'
+                            },
+                            '100%': {
+                                width: '100%'
+                            }
+                        },
+                        'blink-caret': {
+                            '0%, 50%': {
+                                'border-color': 'transparent'
+                            },
+                            '51%, 100%': {
+                                'border-color': '#8b5cf6'
+                            }
+                        },
+                        'scale-in': {
+                            '0%': {
+                                opacity: '0',
+                                transform: 'scale(0.8)'
+                            },
+                            '100%': {
+                                opacity: '1',
+                                transform: 'scale(1)'
+                            }
+                        },
+                        'glow': {
+                            '0%': {
+                                'box-shadow': '0 0 20px rgba(139, 92, 246, 0.3)'
+                            },
+                            '100%': {
+                                'box-shadow': '0 0 40px rgba(139, 92, 246, 0.6)'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-mesh {
+            background: linear-gradient(45deg, #0d1117 0%, #1a1625 25%, #2d1b69 50%, #1a1625 75%, #0d1117 100%);
+            background-size: 400% 400%;
+            animation: gradient-xy 15s ease infinite;
+        }
+        
+        .gradient-mesh-slow {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1831 20%, #2d1b69 40%, #1a1831 60%, #0f0f23 80%, #1a1831 100%);
+            background-size: 300% 300%;
+            animation: gradient-slow 20s ease infinite;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #c084fc 0%, #a855f7 25%, #8b5cf6 50%, #7c3aed 75%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 200% 200%;
+            animation: gradient-xy 8s ease infinite;
+        }
+        
+        .text-gradient-blue {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 25%, #2563eb 50%, #1d4ed8 75%, #1e40af 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card-glow {
+            background: rgba(17, 17, 27, 0.8);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .card-glow:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+            box-shadow: 0 0 50px rgba(139, 92, 246, 0.3);
+            transform: translateY(-10px);
+        }
+        
+        .neon-border {
+            border: 2px solid transparent;
+            background: linear-gradient(45deg, #8b5cf6, #3b82f6) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: subtract;
+        }
+        
+        .typing-animation {
+            overflow: hidden;
+            border-right: 2px solid #8b5cf6;
+            white-space: nowrap;
+            animation: typing 3.5s steps(30, end), blink-caret 0.5s step-end infinite;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .floating-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .custom-shadow {
+            box-shadow: 0 25px 50px -12px rgba(139, 92, 246, 0.25);
+        }
+        
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+        
+        .intersection-observer {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+        
+        .intersection-observer.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .code-block {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: inset 0 0 20px rgba(139, 92, 246, 0.1);
+        }
+        
+        .hero-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(139, 92, 246, 0.6);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; }
+        .particle:nth-child(2) { left: 20%; top: 80%; animation-delay: 2s; }
+        .particle:nth-child(3) { left: 60%; top: 40%; animation-delay: 4s; }
+        .particle:nth-child(4) { left: 80%; top: 70%; animation-delay: 6s; }
+        .particle:nth-child(5) { left: 90%; top: 10%; animation-delay: 1s; }
+        .particle:nth-child(6) { left: 40%; top: 90%; animation-delay: 3s; }
+        .particle:nth-child(7) { left: 70%; top: 30%; animation-delay: 5s; }
+        .particle:nth-child(8) { left: 30%; top: 60%; animation-delay: 7s; }
+    </style>
+</head>
+<body class="bg-gray-950 text-white font-sans scroll-smooth overflow-x-hidden">
+    <!-- ナビゲーション -->
+    <nav class="fixed top-0 w-full z-50 glass-effect">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="text-2xl font-bold">
+                    <span class="text-gradient">Claude Code</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#features" class="hover:text-purple-400 transition-colors duration-300">特徴</a>
+                    <a href="#curriculum" class="hover:text-purple-400 transition-colors duration-300">カリキュラム</a>
+                    <a href="#testimonials" class="hover:text-purple-400 transition-colors duration-300">受講者の声</a>
+                    <a href="#pricing" class="hover:text-purple-400 transition-colors duration-300">料金</a>
+                </div>
+                <button class="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-full font-semibold hover:opacity-90 transition-all duration-300 transform hover:scale-105">
+                    無料相談
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ヒーローセクション -->
+    <section class="relative min-h-screen flex items-center justify-center gradient-mesh overflow-hidden">
+        <!-- パーティクル背景 -->
+        <div class="hero-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        
+        <!-- 背景の光る要素 -->
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-20 left-10 w-96 h-96 bg-purple-600 rounded-full filter blur-3xl animate-pulse-glow"></div>
+            <div class="absolute bottom-20 right-10 w-80 h-80 bg-blue-600 rounded-full filter blur-3xl animate-pulse-glow" style="animation-delay: 2s;"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-600 rounded-full filter blur-3xl animate-pulse-glow" style="animation-delay: 4s;"></div>
+        </div>
+        
+        <div class="container mx-auto px-6 relative z-10 text-center">
+            <div class="animate-fade-in">
+                <h1 class="text-6xl md:text-8xl font-black mb-8 leading-tight">
+                    <span class="text-gradient block">Claude Code</span>
+                    <span class="text-4xl md:text-6xl text-gray-200 block mt-4">マスター講座</span>
+                </h1>
+                
+                <div class="text-xl md:text-2xl text-gray-300 mb-4 max-w-4xl mx-auto">
+                    <span class="typing-animation">最先端のAI開発スキルを身につけ、次世代のエンジニアとして活躍しよう</span>
+                </div>
+                
+                <p class="text-lg md:text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
+                    プロフェッショナルなAI開発者になるための包括的な学習プログラム
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-6 justify-center animate-slide-up">
+                    <button class="bg-gradient-to-r from-purple-600 to-blue-600 px-10 py-4 rounded-full text-lg font-bold hover:opacity-90 transition-all duration-300 transform hover:scale-105 custom-shadow">
+                        🚀 今すぐ始める
+                    </button>
+                    <button class="glass-effect px-10 py-4 rounded-full text-lg font-bold hover:bg-white/10 transition-all duration-300 transform hover:scale-105">
+                        📋 詳細を見る
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- スクロール指示 -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <div class="flex flex-col items-center">
+                <span class="text-gray-400 text-sm mb-2">スクロール</span>
+                <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- 特徴セクション -->
+    <section id="features" class="py-24 gradient-mesh-slow">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-20 intersection-observer">
+                <h2 class="text-5xl md:text-6xl font-bold mb-6">
+                    <span class="text-gradient">講座の特徴</span>
+                </h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                    業界トップレベルの講師陣と最新カリキュラムで、確実にスキルアップを実現
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card-glow rounded-3xl p-8 intersection-observer">
+                    <div class="floating-element">
+                        <div class="w-20 h-20 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-center">実践的カリキュラム</h3>
+                    <p class="text-gray-400 text-center leading-relaxed">
+                        現場で即戦力となるスキルを身につける実践重視のカリキュラム。
+                        <br>リアルなプロジェクトで学習を進めます。
+                    </p>
+                </div>
+                
+                <div class="card-glow rounded-3xl p-8 intersection-observer">
+                    <div class="floating-element">
+                        <div class="w-20 h-20 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-center">個別メンタリング</h3>
+                    <p class="text-gray-400 text-center leading-relaxed">
+                        経験豊富なメンターが1対1でサポート。
+                        <br>あなたの成長を最大限に引き出します。
+                    </p>
+                </div>
+                
+                <div class="card-glow rounded-3xl p-8 intersection-observer">
+                    <div class="floating-element">
+                        <div class="w-20 h-20 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-center">最新テクノロジー</h3>
+                    <p class="text-gray-400 text-center leading-relaxed">
+                        Claude APIを活用した最新のAI開発技術を学習。
+                        <br>常に業界の最前線をキャッチアップ。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- カリキュラムセクション -->
+    <section id="curriculum" class="py-24 bg-gray-950">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-20 intersection-observer">
+                <h2 class="text-5xl md:text-6xl font-bold mb-6">
+                    <span class="text-gradient">カリキュラム</span>
+                </h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                    段階的に学習を進め、確実にスキルを身につけるカリキュラム構成
+                </p>
+            </div>
+            
+            <div class="max-w-5xl mx-auto">
+                <div class="space-y-8">
+                    <div class="card-glow rounded-3xl p-8 intersection-observer">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mr-6">
+                                <span class="text-white font-bold text-xl">01</span>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="text-2xl font-bold mb-3 text-gradient-blue">基礎編：Claude APIの理解</h3>
+                                <p class="text-gray-400 mb-4 leading-relaxed">
+                                    APIの基本概念、認証方法、リクエスト・レスポンスの処理など、
+                                    Claude APIを使った開発の基礎を学習します。
+                                </p>
+                                <div class="code-block rounded-xl p-4 font-mono text-sm">
+                                    <span class="text-purple-400">import</span> <span class="text-blue-400">claude</span>
+                                    <br>
+                                    <span class="text-purple-400">const</span> <span class="text-yellow-400">client</span> = <span class="text-blue-400">new</span> <span class="text-green-400">ClaudeClient</span>();
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-glow rounded-3xl p-8 intersection-observer">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mr-6">
+                                <span class="text-white font-bold text-xl">02</span>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="text-2xl font-bold mb-3 text-gradient-blue">実践編：アプリケーション開発</h3>
+                                <p class="text-gray-400 mb-4 leading-relaxed">
+                                    チャットボット、コード生成ツール、自動化システムなど、
+                                    実際のアプリケーション開発を通じて実践的なスキルを習得します。
+                                </p>
+                                <div class="flex flex-wrap gap-2 mt-4">
+                                    <span class="bg-purple-600/20 text-purple-400 px-3 py-1 rounded-full text-sm">チャットボット</span>
+                                    <span class="bg-blue-600/20 text-blue-400 px-3 py-1 rounded-full text-sm">自動化ツール</span>
+                                    <span class="bg-green-600/20 text-green-400 px-3 py-1 rounded-full text-sm">Web アプリ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-glow rounded-3xl p-8 intersection-observer">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mr-6">
+                                <span class="text-white font-bold text-xl">03</span>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="text-2xl font-bold mb-3 text-gradient-blue">応用編：高度な機能実装</h3>
+                                <p class="text-gray-400 mb-4 leading-relaxed">
+                                    ファインチューニング、プロンプトエンジニアリング、パフォーマンス最適化など、
+                                    上級者向けの高度な技術を学習します。
+                                </p>
+                                <div class="grid grid-cols-2 gap-4 mt-4">
+                                    <div class="bg-gray-800/50 rounded-xl p-3">
+                                        <div class="text-purple-400 font-semibold">プロンプト最適化</div>
+                                        <div class="text-gray-500 text-sm">効果的なプロンプトの作成</div>
+                                    </div>
+                                    <div class="bg-gray-800/50 rounded-xl p-3">
+                                        <div class="text-blue-400 font-semibold">パフォーマンス向上</div>
+                                        <div class="text-gray-500 text-sm">速度・品質の最適化</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-glow rounded-3xl p-8 intersection-observer">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mr-6">
+                                <span class="text-white font-bold text-xl">04</span>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="text-2xl font-bold mb-3 text-gradient-blue">プロジェクト：実務レベルの開発</h3>
+                                <p class="text-gray-400 mb-4 leading-relaxed">
+                                    実際の業務で使えるAIアプリケーションを企画から実装まで、
+                                    チームで協力して完成させます。
+                                </p>
+                                <div class="bg-gradient-to-r from-purple-600/10 to-blue-600/10 rounded-xl p-4 border border-purple-600/20">
+                                    <div class="text-purple-400 font-semibold mb-2">🎯 最終プロジェクト例</div>
+                                    <div class="text-gray-300 text-sm">
+                                        ・AIコードレビューシステム<br>
+                                        ・自動ドキュメント生成ツール<br>
+                                        ・インテリジェント検索エンジン
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 受講者の声セクション -->
+    <section id="testimonials" class="py-24 gradient-mesh-slow">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-20 intersection-observer">
+                <h2 class="text-5xl md:text-6xl font-bold mb-6">
+                    <span class="text-gradient">受講者の声</span>
+                </h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                    実際に講座を受講された方々からの生の声をお聞きください
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card-glow rounded-3xl p-8 intersection-observer">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full mr-4 flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">田</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg">田中 太郎</h4>
+                            <p class="text-sm text-purple-400">Webエンジニア</p>
+                            <div class="flex text-yellow-400 mt-1">
+                                ★★★★★
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 leading-relaxed">
+                        "実践的な内容で、すぐに業務に活かせました。メンターのサポートも手厚く、
+                        疑問点をすぐに解決できたのが良かったです。転職活動でも大きなアピールポイントになりました。"
+                    </p>
+                </div>
+                
+                <div class="card-glow rounded-3xl p-8 intersection-observer">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full mr-4 flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">佐</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg">佐藤 花子</h4>
+                            <p class="text-sm text-purple-400">データサイエンティスト</p>
+                            <div class="flex text-yellow-400 mt-1">
+                                ★★★★★
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 leading-relaxed">
+                        "AI開発の基礎から応用まで体系的に学べました。プロジェクトベースの学習で、
+                        実際の開発フローを体験できたのが大きな収穫です。チームでの開発も勉強になりました。"
+                    </p>
+                </div>
+                
+                <div class="card-glow rounded-3xl p-8 intersection-observer">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full mr-4 flex items-center justify-center">
+                            <span class="text-white font-bold text-xl">山</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg">山田 健一</h4>
+                            <p class="text-sm text-purple-400">フルスタックエンジニア</p>
+                            <div class="flex text-yellow-400 mt-1">
+                                ★★★★★
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 leading-relaxed">
+                        "最新のAI技術を学べる環境が整っていて、常に新しい知識を吸収できました。
+                        講師の質も高く、現場の経験を活かした指導が非常に参考になりました。"
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 統計情報 -->
+            <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center intersection-observer">
+                    <div class="text-4xl font-bold text-gradient mb-2">98%</div>
+                    <div class="text-gray-400">満足度</div>
+                </div>
+                <div class="text-center intersection-observer">
+                    <div class="text-4xl font-bold text-gradient mb-2">1,200+</div>
+                    <div class="text-gray-400">受講生</div>
+                </div>
+                <div class="text-center intersection-observer">
+                    <div class="text-4xl font-bold text-gradient mb-2">85%</div>
+                    <div class="text-gray-400">転職成功率</div>
+                </div>
+                <div class="text-center intersection-observer">
+                    <div class="text-4xl font-bold text-gradient mb-2">24/7</div>
+                    <div class="text-gray-400">サポート</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 料金プランセクション -->
+    <section id="pricing" class="py-24 bg-gray-950">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-20 intersection-observer">
+                <h2 class="text-5xl md:text-6xl font-bold mb-6">
+                    <span class="text-gradient">料金プラン</span>
+                </h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">
+                    あなたの学習スタイルに合わせた柔軟な料金プランをご用意
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- ベーシックプラン -->
+                <div class="card-glow rounded-3xl p-8 intersection-observer">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold mb-4">ベーシック</h3>
+                        <div class="mb-2">
+                            <span class="text-5xl font-bold text-gradient">¥98,000</span>
+                        </div>
+                        <div class="text-gray-400">3ヶ月 / 基礎学習</div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-10">
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>基礎カリキュラム完全アクセス</span>
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>週1回のグループメンタリング</span>
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>オンラインコミュニティ参加</span>
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>基礎プロジェクト課題</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full bg-gray-800 hover:bg-gray-700 py-4 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-105">
+                        選択する
+                    </button>
+                </div>
+                
+                <!-- プロフェッショナルプラン（推奨） -->
+                <div class="relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <div class="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-2 rounded-full text-sm font-bold">
+                            🏆 最も人気
+                        </div>
+                    </div>
+                    <div class="card-glow rounded-3xl p-8 border-2 border-purple-600/50 transform scale-105 intersection-observer">
+                        <div class="text-center mb-8">
+                            <h3 class="text-2xl font-bold mb-4">プロフェッショナル</h3>
+                            <div class="mb-2">
+                                <span class="text-5xl font-bold text-gradient">¥198,000</span>
+                            </div>
+                            <div class="text-gray-400">3ヶ月 / 実践学習</div>
+                        </div>
+                        
+                        <ul class="space-y-4 mb-10">
+                            <li class="flex items-center">
+                                <svg class="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span>全カリキュラム完全アクセス</span>
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span>週2回の個別メンタリング</span>
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span>プロジェクトレビュー</span>
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span>転職サポート</span>
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span>24時間質問サポート</span>
+                            </li>
+                        </ul>
+                        
+                        <button class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:opacity-90 py-4 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-105 custom-shadow">
+                            選択する
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- エンタープライズプラン -->
+                <div class="card-glow rounded-3xl p-8 intersection-observer">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold mb-4">エンタープライズ</h3>
+                        <div class="mb-2">
+                            <span class="text-5xl font-bold text-gradient">¥398,000</span>
+                        </div>
+                        <div class="text-gray-400">3ヶ月 / 完全カスタマイズ</div>
+                    </div>
+                    
+                    <ul class="space-y-4 mb-10">
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>プロフェッショナルの全機能</span>
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>専属シニアメンター</span>
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>カスタムカリキュラム</span>
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>企業研修対応</span>
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>優先サポート</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full bg-gray-800 hover:bg-gray-700 py-4 rounded-2xl font-semibold transition-all duration-300 transform hover:scale-105">
+                        お問い合わせ
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 特典情報 -->
+            <div class="mt-16 text-center">
+                <div class="bg-gradient-to-r from-purple-600/10 to-blue-600/10 rounded-2xl p-8 border border-purple-600/20 max-w-4xl mx-auto">
+                    <h3 class="text-2xl font-bold mb-4 text-gradient">🎁 今だけ特典</h3>
+                    <div class="grid md:grid-cols-3 gap-6 text-sm">
+                        <div>
+                            <div class="text-purple-400 font-semibold">早期割引</div>
+                            <div class="text-gray-400">先着50名様限定で20%OFF</div>
+                        </div>
+                        <div>
+                            <div class="text-blue-400 font-semibold">無料延長</div>
+                            <div class="text-gray-400">サポート期間1ヶ月延長</div>
+                        </div>
+                        <div>
+                            <div class="text-green-400 font-semibold">特典資料</div>
+                            <div class="text-gray-400">AI開発ベストプラクティス集</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTAセクション -->
+    <section class="py-24 gradient-mesh">
+        <div class="container mx-auto px-6 text-center">
+            <div class="max-w-4xl mx-auto intersection-observer">
+                <h2 class="text-5xl md:text-6xl font-bold mb-8">
+                    <span class="text-gradient">未来のAIエンジニアへの第一歩</span>
+                </h2>
+                <p class="text-xl md:text-2xl text-gray-300 mb-12 leading-relaxed">
+                    今なら無料相談実施中。あなたのキャリアプランに合わせた<br>
+                    最適な学習プランをご提案します。
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-6 justify-center mb-12">
+                    <button class="bg-gradient-to-r from-purple-600 to-blue-600 px-10 py-4 rounded-full text-lg font-bold hover:opacity-90 transition-all duration-300 transform hover:scale-105 custom-shadow">
+                        🚀 無料相談を予約する
+                    </button>
+                    <button class="glass-effect px-10 py-4 rounded-full text-lg font-bold hover:bg-white/10 transition-all duration-300 transform hover:scale-105">
+                        📄 資料をダウンロード
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+                    <div class="flex items-center justify-center">
+                        <svg class="w-5 h-5 text-purple-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="text-gray-400">無料相談・無料体験</span>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <svg class="w-5 h-5 text-purple-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="text-gray-400">返金保証制度</span>
+                    </div>
+                    <div class="flex items-center justify-center">
+                        <svg class="w-5 h-5 text-purple-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="text-gray-400">24時間サポート</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="bg-gray-900 py-16 border-t border-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <h3 class="text-3xl font-bold text-gradient mb-4">Claude Code</h3>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        最先端のAI開発スキルを学び、次世代のエンジニアとして活躍するための総合学習プラットフォームです。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-purple-600 transition-all duration-300 transform hover:scale-110">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-purple-600 transition-all duration-300 transform hover:scale-110">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-purple-600 transition-all duration-300 transform hover:scale-110">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center hover:bg-purple-600 transition-all duration-300 transform hover:scale-110">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">講座について</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-purple-400 transition-colors">カリキュラム</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition-colors">講師紹介</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition-colors">受講生の作品</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition-colors">企業研修</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-lg mb-4">サポート</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-purple-400 transition-colors">よくある質問</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition-colors">お問い合わせ</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition-colors">利用規約</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition-colors">プライバシーポリシー</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-12 pt-8 border-t border-gray-800">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-center md:text-left">
+                        &copy; 2024 Claude Code Master Course. All rights reserved.
+                    </p>
+                    <div class="flex space-x-6 mt-4 md:mt-0">
+                        <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">Terms</a>
+                        <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">Privacy</a>
+                        <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // スムーズスクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.intersection-observer').forEach(el => {
+            observer.observe(el);
+        });
+
+        // タイピングアニメーション再起動
+        function restartTypingAnimation() {
+            const typingElement = document.querySelector('.typing-animation');
+            if (typingElement) {
+                typingElement.style.animation = 'none';
+                typingElement.offsetHeight; // trigger reflow
+                typingElement.style.animation = 'typing 3.5s steps(30, end), blink-caret 0.5s step-end infinite';
+            }
+        }
+
+        // 定期的にタイピングアニメーションを再起動
+        setInterval(restartTypingAnimation, 5000);
+
+        // パララックス効果
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallaxElements = document.querySelectorAll('.floating-element');
+            
+            parallaxElements.forEach(element => {
+                const speed = 0.5;
+                const yPos = -(scrolled * speed);
+                element.style.transform = `translateY(${yPos}px)`;
+            });
+        });
+
+        // ナビゲーション背景の透明度制御
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.style.backgroundColor = 'rgba(17, 24, 39, 0.95)';
+            } else {
+                nav.style.backgroundColor = 'rgba(17, 24, 39, 0.8)';
+            }
+        });
+    </script>
+</body>
+</html>

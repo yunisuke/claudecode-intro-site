@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Codeマスター講座 - 最先端AI開発を学ぶ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Noto Sans JP', 'sans-serif'],
+                    },
+                    animation: {
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                        'fade-up': 'fade-up 0.5s ease-out',
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        'gradient-x': {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            }
+                        },
+                        'fade-up': {
+                            '0%': {
+                                opacity: '0',
+                                transform: 'translateY(20px)'
+                            },
+                            '100%': {
+                                opacity: '1',
+                                transform: 'translateY(0)'
+                            }
+                        },
+                        'pulse-glow': {
+                            '0%, 100%': {
+                                opacity: '0.5',
+                                transform: 'scale(1)'
+                            },
+                            '50%': {
+                                opacity: '0.8',
+                                transform: 'scale(1.05)'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-mesh {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 25%, #1e1b4b 50%, #0f0c29 75%, #1e1b4b 100%);
+            background-size: 400% 400%;
+            animation: gradient-x 15s ease infinite;
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #c084fc 0%, #818cf8 50%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .card-glow {
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+            transition: all 0.3s ease;
+        }
+        .card-glow:hover {
+            box-shadow: 0 0 50px rgba(139, 92, 246, 0.4);
+            transform: translateY(-5px);
+        }
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-gray-950 text-white font-sans scroll-smooth">
+    <!-- ナビゲーション -->
+    <nav class="fixed top-0 w-full z-50 bg-gray-900/80 backdrop-blur-md border-b border-gray-800">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="text-2xl font-bold text-gradient">Claude Code</div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#features" class="hover:text-purple-400 transition">特徴</a>
+                    <a href="#curriculum" class="hover:text-purple-400 transition">カリキュラム</a>
+                    <a href="#testimonials" class="hover:text-purple-400 transition">受講者の声</a>
+                    <a href="#pricing" class="hover:text-purple-400 transition">料金</a>
+                </div>
+                <button class="bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-2 rounded-full font-semibold hover:opacity-90 transition">
+                    無料相談
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ヒーローセクション -->
+    <section class="relative min-h-screen flex items-center justify-center gradient-mesh overflow-hidden">
+        <div class="absolute inset-0 opacity-30">
+            <div class="absolute top-10 left-10 w-72 h-72 bg-purple-500 rounded-full filter blur-3xl animate-pulse-glow"></div>
+            <div class="absolute bottom-10 right-10 w-96 h-96 bg-blue-500 rounded-full filter blur-3xl animate-pulse-glow animation-delay-2000"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-indigo-500 rounded-full filter blur-3xl animate-pulse-glow animation-delay-4000"></div>
+        </div>
+        
+        <div class="container mx-auto px-6 relative z-10 text-center">
+            <h1 class="text-5xl md:text-7xl font-black mb-6 animate-fade-up">
+                <span class="text-gradient">Claude Code</span>
+                <br />
+                <span class="text-4xl md:text-6xl">マスター講座</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto animate-fade-up animation-delay-200">
+                最先端のAI開発スキルを身につけ、<br />
+                次世代のエンジニアとして活躍しよう
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-up animation-delay-400">
+                <button class="bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-4 rounded-full text-lg font-bold hover:opacity-90 transition transform hover:scale-105">
+                    今すぐ始める
+                </button>
+                <button class="border-2 border-purple-500 px-8 py-4 rounded-full text-lg font-bold hover:bg-purple-500/20 transition">
+                    詳細を見る
+                </button>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+            <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- 特徴セクション -->
+    <section id="features" class="py-20 bg-gray-900">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16">
+                <span class="text-gradient">講座の特徴</span>
+            </h2>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gray-800/50 rounded-2xl p-8 card-glow backdrop-blur-sm">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">実践的カリキュラム</h3>
+                    <p class="text-gray-400">現場で即戦力となるスキルを身につける実践重視のカリキュラム。プロジェクトベースで学習を進めます。</p>
+                </div>
+                
+                <div class="bg-gray-800/50 rounded-2xl p-8 card-glow backdrop-blur-sm">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">個別メンタリング</h3>
+                    <p class="text-gray-400">経験豊富なメンターが1対1でサポート。あなたの成長を最大限に引き出します。</p>
+                </div>
+                
+                <div class="bg-gray-800/50 rounded-2xl p-8 card-glow backdrop-blur-sm">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">最新テクノロジー</h3>
+                    <p class="text-gray-400">Claude APIを活用した最新のAI開発技術を学習。常に業界の最前線をキャッチアップ。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- カリキュラムセクション -->
+    <section id="curriculum" class="py-20 bg-gray-950">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16">
+                <span class="text-gradient">カリキュラム</span>
+            </h2>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="space-y-6">
+                    <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 hover:border-purple-600 transition">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-12 h-12 bg-purple-600/20 rounded-full flex items-center justify-center mr-4">
+                                <span class="text-purple-400 font-bold">01</span>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="text-xl font-bold mb-2">基礎編：Claude APIの理解</h3>
+                                <p class="text-gray-400">APIの基本概念、認証方法、リクエスト・レスポンスの処理など</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 hover:border-purple-600 transition">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-12 h-12 bg-purple-600/20 rounded-full flex items-center justify-center mr-4">
+                                <span class="text-purple-400 font-bold">02</span>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="text-xl font-bold mb-2">実践編：アプリケーション開発</h3>
+                                <p class="text-gray-400">チャットボット、コード生成ツール、自動化システムの構築</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 hover:border-purple-600 transition">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-12 h-12 bg-purple-600/20 rounded-full flex items-center justify-center mr-4">
+                                <span class="text-purple-400 font-bold">03</span>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="text-xl font-bold mb-2">応用編：高度な機能実装</h3>
+                                <p class="text-gray-400">ファインチューニング、プロンプトエンジニアリング、パフォーマンス最適化</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-900 rounded-2xl p-6 border border-gray-800 hover:border-purple-600 transition">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 w-12 h-12 bg-purple-600/20 rounded-full flex items-center justify-center mr-4">
+                                <span class="text-purple-400 font-bold">04</span>
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="text-xl font-bold mb-2">プロジェクト：実務レベルの開発</h3>
+                                <p class="text-gray-400">実際の業務で使えるAIアプリケーションを企画から実装まで</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 受講者の声セクション -->
+    <section id="testimonials" class="py-20 bg-gray-900">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16">
+                <span class="text-gradient">受講者の声</span>
+            </h2>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gray-800/50 rounded-2xl p-8 backdrop-blur-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full mr-4"></div>
+                        <div>
+                            <h4 class="font-bold">田中 太郎</h4>
+                            <p class="text-sm text-gray-400">Webエンジニア</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300">"実践的な内容で、すぐに業務に活かせました。メンターのサポートも手厚く、疑問点をすぐに解決できたのが良かったです。"</p>
+                </div>
+                
+                <div class="bg-gray-800/50 rounded-2xl p-8 backdrop-blur-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full mr-4"></div>
+                        <div>
+                            <h4 class="font-bold">佐藤 花子</h4>
+                            <p class="text-sm text-gray-400">データサイエンティスト</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300">"AI開発の基礎から応用まで体系的に学べました。プロジェクトベースの学習で、実際の開発フローを体験できたのが大きな収穫です。"</p>
+                </div>
+                
+                <div class="bg-gray-800/50 rounded-2xl p-8 backdrop-blur-sm">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full mr-4"></div>
+                        <div>
+                            <h4 class="font-bold">山田 健一</h4>
+                            <p class="text-sm text-gray-400">フルスタックエンジニア</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-300">"最新のAI技術を学べる環境が整っていて、常に新しい知識を吸収できました。転職活動でも大きなアピールポイントになりました。"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 料金プランセクション -->
+    <section id="pricing" class="py-20 bg-gray-950">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16">
+                <span class="text-gradient">料金プラン</span>
+            </h2>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="bg-gray-900 rounded-2xl p-8 border border-gray-800">
+                    <h3 class="text-2xl font-bold mb-4">ベーシック</h3>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold">¥98,000</span>
+                        <span class="text-gray-400">/3ヶ月</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            基礎カリキュラム
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            週1回のグループメンタリング
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            オンラインコミュニティ
+                        </li>
+                    </ul>
+                    <button class="w-full bg-gray-800 hover:bg-gray-700 py-3 rounded-full font-semibold transition">
+                        選択する
+                    </button>
+                </div>
+                
+                <div class="bg-gradient-to-b from-purple-900/20 to-blue-900/20 rounded-2xl p-8 border-2 border-purple-600 transform scale-105">
+                    <div class="bg-purple-600 text-sm font-bold px-4 py-1 rounded-full inline-block mb-4">おすすめ</div>
+                    <h3 class="text-2xl font-bold mb-4">プロフェッショナル</h3>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold">¥198,000</span>
+                        <span class="text-gray-400">/3ヶ月</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            全カリキュラムアクセス
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            週2回の個別メンタリング
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            プロジェクトレビュー
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            転職サポート
+                        </li>
+                    </ul>
+                    <button class="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:opacity-90 py-3 rounded-full font-semibold transition">
+                        選択する
+                    </button>
+                </div>
+                
+                <div class="bg-gray-900 rounded-2xl p-8 border border-gray-800">
+                    <h3 class="text-2xl font-bold mb-4">エンタープライズ</h3>
+                    <div class="mb-6">
+                        <span class="text-4xl font-bold">¥398,000</span>
+                        <span class="text-gray-400">/3ヶ月</span>
+                    </div>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            プロフェッショナルの全機能
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            専属メンター
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            カスタムカリキュラム
+                        </li>
+                        <li class="flex items-center">
+                            <svg class="w-5 h-5 text-purple-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            企業研修対応
+                        </li>
+                    </ul>
+                    <button class="w-full bg-gray-800 hover:bg-gray-700 py-3 rounded-full font-semibold transition">
+                        お問い合わせ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTAセクション -->
+    <section class="py-20 bg-gradient-to-r from-purple-900/20 to-blue-900/20">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8">
+                <span class="text-gradient">未来のAIエンジニアへの第一歩</span>
+            </h2>
+            <p class="text-xl text-gray-300 mb-12 max-w-3xl mx-auto">
+                今なら無料相談実施中。あなたのキャリアプランに合わせた最適な学習プランをご提案します。
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-4 rounded-full text-lg font-bold hover:opacity-90 transition transform hover:scale-105">
+                    無料相談を予約する
+                </button>
+                <button class="border-2 border-purple-500 px-8 py-4 rounded-full text-lg font-bold hover:bg-purple-500/20 transition">
+                    資料をダウンロード
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- フッター -->
+    <footer class="bg-gray-900 py-12 border-t border-gray-800">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold text-gradient mb-4">Claude Code</h3>
+                    <p class="text-gray-400">最先端のAI開発スキルを学ぶ</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">講座について</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-purple-400 transition">カリキュラム</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition">講師紹介</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition">受講生の作品</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">サポート</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-purple-400 transition">よくある質問</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition">お問い合わせ</a></li>
+                        <li><a href="#" class="hover:text-purple-400 transition">利用規約</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">フォローする</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-purple-600 transition">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-purple-600 transition">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-purple-600 transition">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12c0-3.403 2.759-6.162 6.162-6.162s6.162 2.759 6.162 6.162-2.759 6.162-6.162 6.162-6.162-2.759-6.162-6.162zm6.162 4.035c-2.206 0-4.035-1.806-4.035-4.035 0-2.206 1.806-4.035 4.035-4.035 2.206 0 4.035 1.806 4.035 4.035 0 2.206-1.829 4.035-4.035 4.035zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44 1.44-.645 1.44-1.44-.644-1.44-1.44-1.44z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
+                <p>&copy; 2024 Claude Code Master Course. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // スムーズスクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // アニメーション遅延の追加
+        const style = document.createElement('style');
+        style.textContent = `
+            .animation-delay-200 { animation-delay: 200ms; }
+            .animation-delay-400 { animation-delay: 400ms; }
+            .animation-delay-2000 { animation-delay: 2000ms; }
+            .animation-delay-4000 { animation-delay: 4000ms; }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

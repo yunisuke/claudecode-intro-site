@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ポケポケ完全攻略ガイド - Pokemon Card Game Pocket</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['M PLUS Rounded 1c', 'sans-serif'],
+                    },
+                    colors: {
+                        'pokemon-red': '#EE1515',
+                        'pokemon-darkred': '#CC0000',
+                        'pokemon-blue': '#0075BE',
+                        'pokemon-yellow': '#FFDE00',
+                        'pokemon-dark': '#0A285F',
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .type-normal { background-color: #A8A878; }
+        .type-fire { background-color: #F08030; }
+        .type-water { background-color: #6890F0; }
+        .type-electric { background-color: #F8D030; }
+        .type-grass { background-color: #78C850; }
+        .type-ice { background-color: #98D8D8; }
+        .type-fighting { background-color: #C03028; }
+        .type-poison { background-color: #A040A0; }
+        .type-ground { background-color: #E0C068; }
+        .type-flying { background-color: #A890F0; }
+        .type-psychic { background-color: #F85888; }
+        .type-bug { background-color: #A8B820; }
+        .type-rock { background-color: #B8A038; }
+        .type-ghost { background-color: #705898; }
+        .type-dragon { background-color: #7038F8; }
+        .type-dark { background-color: #705848; }
+        .type-steel { background-color: #B8B8D0; }
+        .type-fairy { background-color: #EE99AC; }
+        
+        .cp-bar {
+            background: linear-gradient(to right, #22c55e 0%, #eab308 50%, #ef4444 100%);
+        }
+        
+        .raid-tier-1 { background-color: #FF69B4; }
+        .raid-tier-3 { background-color: #FFA500; }
+        .raid-tier-5 { background-color: #FF0000; }
+        .raid-tier-mega { background: linear-gradient(135deg, #8B00FF, #FF00FF); }
+        
+        .stat-bar {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shine 2s infinite;
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .pokemon-card {
+            transition: all 0.3s ease;
+        }
+        
+        .pokemon-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        /* カード拡大表示のスタイル */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-card {
+            max-width: 90vw;
+            max-height: 90vh;
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+            cursor: grab;
+        }
+        
+        .modal-card:active {
+            cursor: grabbing;
+        }
+        
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+        
+        .modal-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            transition: transform 0.1s ease;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: -50px;
+            right: -10px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 1);
+        }
+        
+        .modal-info {
+            position: absolute;
+            bottom: -60px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+        }
+        
+        .card-clickable {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .card-clickable:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- ヘッダー -->
+    <header class="bg-gradient-to-r from-pokemon-red to-pokemon-darkred text-white sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between py-4">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-2xl font-black">ポケポケ攻略</h1>
+                    <span class="text-sm bg-pokemon-yellow text-pokemon-dark px-2 py-1 rounded font-bold">最新パック対応</span>
+                </div>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#pokedex" class="hover:text-pokemon-yellow transition">図鑑</a>
+                    <a href="#raid" class="hover:text-pokemon-yellow transition">レイド</a>
+                    <a href="#pvp" class="hover:text-pokemon-yellow transition">バトル</a>
+                    <a href="#events" class="hover:text-pokemon-yellow transition">イベント</a>
+                    <a href="#tools" class="hover:text-pokemon-yellow transition">ツール</a>
+                </nav>
+                <button class="md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ヒーローセクション -->
+    <section class="bg-gradient-to-br from-pokemon-blue via-pokemon-dark to-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-8">
+                <h2 class="text-4xl md:text-5xl font-black mb-4">ポケモンカードゲーム ポケット</h2>
+                <p class="text-xl mb-8">最新パックの人気カードをチェック！</p>
+            </div>
+            
+            <!-- 人気カード3枚 -->
+            <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-8">
+                <!-- ピカチュウex -->
+                <div class="transform hover:scale-105 transition-transform duration-300">
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-lg blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                        <div class="relative bg-gray-900 rounded-lg p-2">
+                            <img src="original.png" 
+                                 alt="ピカチュウex" 
+                                 class="w-full rounded-lg shadow-2xl card-clickable"
+                                 onclick="openCardModal('original.png', 'ピカチュウex', 'HP 120 エレキサークル')">
+                            <div class="mt-2 text-center">
+                                <p class="text-sm font-bold text-yellow-400">ピカチュウex</p>
+                                <p class="text-xs text-gray-400">HP 120 エレキサークル</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- リザードンex -->
+                <div class="transform hover:scale-105 transition-transform duration-300">
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-gradient-to-r from-orange-500 to-red-600 rounded-lg blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                        <div class="relative bg-gray-900 rounded-lg p-2">
+                            <img src="l2.png" 
+                                 alt="リザードンex" 
+                                 class="w-full rounded-lg shadow-2xl card-clickable"
+                                 onclick="openCardModal('l2.png', 'リザードンex', 'HP 180 ぐれんのあらし')">
+                            <div class="mt-2 text-center">
+                                <p class="text-sm font-bold text-orange-400">リザードンex</p>
+                                <p class="text-xs text-gray-400">HP 180 ぐれんのあらし</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ミュウツーex -->
+                <div class="transform hover:scale-105 transition-transform duration-300">
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                        <div class="relative bg-gray-900 rounded-lg p-2">
+                            <img src="l15.png" 
+                                 alt="ミュウツーex" 
+                                 class="w-full rounded-lg shadow-2xl card-clickable"
+                                 onclick="openCardModal('l15.png', 'ミュウツーex', 'HP 150 サイコドライブ')">
+                            <div class="mt-2 text-center">
+                                <p class="text-sm font-bold text-purple-400">ミュウツーex</p>
+                                <p class="text-xs text-gray-400">HP 150 サイコドライブ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 検索バー -->
+            <div class="max-w-2xl mx-auto">
+                <div class="relative">
+                    <input type="text" placeholder="カード名・ポケモン名で検索..." 
+                           class="w-full px-6 py-4 rounded-full text-gray-900 text-lg pl-12">
+                    <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- クイックアクセス -->
+    <section class="py-8 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <a href="#pack-info" class="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg p-6 text-center hover:scale-105 transition">
+                    <div class="text-3xl mb-2">📦</div>
+                    <h3 class="font-bold">最新パック情報</h3>
+                    <p class="text-sm">遺伝子の楔</p>
+                </a>
+                <a href="#deck-builder" class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-6 text-center hover:scale-105 transition">
+                    <div class="text-3xl mb-2">🎴</div>
+                    <h3 class="font-bold">デッキ構築</h3>
+                    <p class="text-sm">最強デッキレシピ</p>
+                </a>
+                <a href="#battle-guide" class="bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg p-6 text-center hover:scale-105 transition">
+                    <div class="text-3xl mb-2">⚔️</div>
+                    <h3 class="font-bold">バトル攻略</h3>
+                    <p class="text-sm">勝利のコツ</p>
+                </a>
+                <a href="#collection" class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-lg p-6 text-center hover:scale-105 transition">
+                    <div class="text-3xl mb-2">✨</div>
+                    <h3 class="font-bold">コレクション</h3>
+                    <p class="text-sm">レアカード一覧</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ポケモン図鑑セクション -->
+    <section id="pokedex" class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-black mb-8 flex items-center">
+                <span class="bg-pokemon-red text-white px-4 py-2 rounded-lg mr-4">図鑑</span>
+                人気ポケモンランキング
+            </h2>
+            
+            <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- ピカチュウ -->
+                <div class="pokemon-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-br from-yellow-400 to-yellow-500 p-4">
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" 
+                             alt="ピカチュウ" class="w-32 h-32 mx-auto">
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-lg font-bold">ピカチュウ</h3>
+                            <span class="text-sm text-gray-500">#025</span>
+                        </div>
+                        <div class="flex space-x-2 mb-3">
+                            <span class="type-electric text-white text-xs px-3 py-1 rounded">でんき</span>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span>最大CP</span>
+                                    <span class="font-bold">938</span>
+                                </div>
+                                <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="h-full cp-bar" style="width: 30%"></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span>攻撃: 112</span>
+                                <span>防御: 96</span>
+                                <span>HP: 111</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- カイリュー -->
+                <div class="pokemon-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-br from-orange-400 to-blue-500 p-4">
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/149.png" 
+                             alt="カイリュー" class="w-32 h-32 mx-auto">
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-lg font-bold">カイリュー</h3>
+                            <span class="text-sm text-gray-500">#149</span>
+                        </div>
+                        <div class="flex space-x-2 mb-3">
+                            <span class="type-dragon text-white text-xs px-3 py-1 rounded">ドラゴン</span>
+                            <span class="type-flying text-white text-xs px-3 py-1 rounded">ひこう</span>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span>最大CP</span>
+                                    <span class="font-bold">3792</span>
+                                </div>
+                                <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="h-full cp-bar" style="width: 95%"></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span>攻撃: 263</span>
+                                <span>防御: 198</span>
+                                <span>HP: 209</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ミュウツー -->
+                <div class="pokemon-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-br from-purple-500 to-purple-700 p-4">
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png" 
+                             alt="ミュウツー" class="w-32 h-32 mx-auto">
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-lg font-bold">ミュウツー</h3>
+                            <span class="text-sm text-gray-500">#150</span>
+                        </div>
+                        <div class="flex space-x-2 mb-3">
+                            <span class="type-psychic text-white text-xs px-3 py-1 rounded">エスパー</span>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span>最大CP</span>
+                                    <span class="font-bold">4178</span>
+                                </div>
+                                <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="h-full cp-bar" style="width: 100%"></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span>攻撃: 300</span>
+                                <span>防御: 182</span>
+                                <span>HP: 214</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ガブリアス -->
+                <div class="pokemon-card bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="bg-gradient-to-br from-blue-600 to-gray-700 p-4">
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/445.png" 
+                             alt="ガブリアス" class="w-32 h-32 mx-auto">
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-lg font-bold">ガブリアス</h3>
+                            <span class="text-sm text-gray-500">#445</span>
+                        </div>
+                        <div class="flex space-x-2 mb-3">
+                            <span class="type-dragon text-white text-xs px-3 py-1 rounded">ドラゴン</span>
+                            <span class="type-ground text-white text-xs px-3 py-1 rounded">じめん</span>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span>最大CP</span>
+                                    <span class="font-bold">3962</span>
+                                </div>
+                                <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="h-full cp-bar" style="width: 98%"></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-xs">
+                                <span>攻撃: 261</span>
+                                <span>防御: 193</span>
+                                <span>HP: 239</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <button class="bg-pokemon-blue text-white px-8 py-3 rounded-full font-bold hover:bg-blue-700 transition">
+                    全ポケモンを見る →
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- レイドバトル情報 -->
+    <section id="raid" class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-black mb-8 flex items-center">
+                <span class="bg-pokemon-red text-white px-4 py-2 rounded-lg mr-4">レイド</span>
+                現在開催中のレイドボス
+            </h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 5つ星レイド -->
+                <div class="bg-gray-900 text-white rounded-lg overflow-hidden">
+                    <div class="raid-tier-5 p-2 text-center font-bold">
+                        ★★★★★ 伝説レイド
+                    </div>
+                    <div class="p-6">
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png" 
+                             alt="ミュウツー" class="w-32 h-32 mx-auto mb-4">
+                        <h3 class="text-xl font-bold text-center mb-2">ミュウツー</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <span class="text-sm text-gray-400">推奨人数</span>
+                                <p class="font-bold">5人以上</p>
+                            </div>
+                            <div>
+                                <span class="text-sm text-gray-400">弱点タイプ</span>
+                                <div class="flex space-x-2 mt-1">
+                                    <span class="type-bug text-white text-xs px-2 py-1 rounded">むし</span>
+                                    <span class="type-ghost text-white text-xs px-2 py-1 rounded">ゴースト</span>
+                                    <span class="type-dark text-white text-xs px-2 py-1 rounded">あく</span>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="text-sm text-gray-400">おすすめポケモン</span>
+                                <p class="text-sm">ギラティナ、ダークライ、シャンデラ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- メガレイド -->
+                <div class="bg-gray-900 text-white rounded-lg overflow-hidden">
+                    <div class="raid-tier-mega p-2 text-center font-bold">
+                        MEGA メガレイド
+                    </div>
+                    <div class="p-6">
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png" 
+                             alt="リザードン" class="w-32 h-32 mx-auto mb-4">
+                        <h3 class="text-xl font-bold text-center mb-2">メガリザードンY</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <span class="text-sm text-gray-400">推奨人数</span>
+                                <p class="font-bold">3人以上</p>
+                            </div>
+                            <div>
+                                <span class="text-sm text-gray-400">弱点タイプ</span>
+                                <div class="flex space-x-2 mt-1">
+                                    <span class="type-water text-white text-xs px-2 py-1 rounded">みず</span>
+                                    <span class="type-electric text-white text-xs px-2 py-1 rounded">でんき</span>
+                                    <span class="type-rock text-white text-xs px-2 py-1 rounded">いわ</span>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="text-sm text-gray-400">おすすめポケモン</span>
+                                <p class="text-sm">カイオーガ、ラムパルド、ドサイドン</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3つ星レイド -->
+                <div class="bg-gray-900 text-white rounded-lg overflow-hidden">
+                    <div class="raid-tier-3 p-2 text-center font-bold">
+                        ★★★ レイド
+                    </div>
+                    <div class="p-6">
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/68.png" 
+                             alt="カイリキー" class="w-32 h-32 mx-auto mb-4">
+                        <h3 class="text-xl font-bold text-center mb-2">カイリキー</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <span class="text-sm text-gray-400">推奨人数</span>
+                                <p class="font-bold">1-2人</p>
+                            </div>
+                            <div>
+                                <span class="text-sm text-gray-400">弱点タイプ</span>
+                                <div class="flex space-x-2 mt-1">
+                                    <span class="type-flying text-white text-xs px-2 py-1 rounded">ひこう</span>
+                                    <span class="type-psychic text-white text-xs px-2 py-1 rounded">エスパー</span>
+                                    <span class="type-fairy text-white text-xs px-2 py-1 rounded">フェアリー</span>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="text-sm text-gray-400">おすすめポケモン</span>
+                                <p class="text-sm">ミュウツー、ルギア、トゲキッス</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- タイプ相性表 -->
+    <section id="type-chart" class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-black mb-8 flex items-center">
+                <span class="bg-pokemon-blue text-white px-4 py-2 rounded-lg mr-4">相性</span>
+                タイプ相性早見表
+            </h2>
+            
+            <div class="bg-white rounded-lg shadow-lg p-6 overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b-2">
+                            <th class="text-left p-2">攻撃タイプ</th>
+                            <th class="text-center p-2">効果抜群</th>
+                            <th class="text-center p-2">効果いまひとつ</th>
+                            <th class="text-center p-2">効果なし</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="p-3">
+                                <span class="type-fire text-white px-3 py-1 rounded text-sm">ほのお</span>
+                            </td>
+                            <td class="p-3">
+                                <div class="flex flex-wrap gap-1 justify-center">
+                                    <span class="type-grass text-white text-xs px-2 py-1 rounded">くさ</span>
+                                    <span class="type-ice text-white text-xs px-2 py-1 rounded">こおり</span>
+                                    <span class="type-bug text-white text-xs px-2 py-1 rounded">むし</span>
+                                    <span class="type-steel text-white text-xs px-2 py-1 rounded">はがね</span>
+                                </div>
+                            </td>
+                            <td class="p-3">
+                                <div class="flex flex-wrap gap-1 justify-center">
+                                    <span class="type-fire text-white text-xs px-2 py-1 rounded">ほのお</span>
+                                    <span class="type-water text-white text-xs px-2 py-1 rounded">みず</span>
+                                    <span class="type-rock text-white text-xs px-2 py-1 rounded">いわ</span>
+                                    <span class="type-dragon text-white text-xs px-2 py-1 rounded">ドラゴン</span>
+                                </div>
+                            </td>
+                            <td class="p-3 text-center text-gray-400">
+                                -
+                            </td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="p-3">
+                                <span class="type-water text-white px-3 py-1 rounded text-sm">みず</span>
+                            </td>
+                            <td class="p-3">
+                                <div class="flex flex-wrap gap-1 justify-center">
+                                    <span class="type-fire text-white text-xs px-2 py-1 rounded">ほのお</span>
+                                    <span class="type-ground text-white text-xs px-2 py-1 rounded">じめん</span>
+                                    <span class="type-rock text-white text-xs px-2 py-1 rounded">いわ</span>
+                                </div>
+                            </td>
+                            <td class="p-3">
+                                <div class="flex flex-wrap gap-1 justify-center">
+                                    <span class="type-water text-white text-xs px-2 py-1 rounded">みず</span>
+                                    <span class="type-grass text-white text-xs px-2 py-1 rounded">くさ</span>
+                                    <span class="type-dragon text-white text-xs px-2 py-1 rounded">ドラゴン</span>
+                                </div>
+                            </td>
+                            <td class="p-3 text-center text-gray-400">
+                                -
+                            </td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="p-3">
+                                <span class="type-electric text-white px-3 py-1 rounded text-sm">でんき</span>
+                            </td>
+                            <td class="p-3">
+                                <div class="flex flex-wrap gap-1 justify-center">
+                                    <span class="type-water text-white text-xs px-2 py-1 rounded">みず</span>
+                                    <span class="type-flying text-white text-xs px-2 py-1 rounded">ひこう</span>
+                                </div>
+                            </td>
+                            <td class="p-3">
+                                <div class="flex flex-wrap gap-1 justify-center">
+                                    <span class="type-electric text-white text-xs px-2 py-1 rounded">でんき</span>
+                                    <span class="type-grass text-white text-xs px-2 py-1 rounded">くさ</span>
+                                    <span class="type-dragon text-white text-xs px-2 py-1 rounded">ドラゴン</span>
+                                </div>
+                            </td>
+                            <td class="p-3 text-center">
+                                <span class="type-ground text-white text-xs px-2 py-1 rounded">じめん</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-6 text-center">
+                <button class="bg-pokemon-blue text-white px-8 py-3 rounded-full font-bold hover:bg-blue-700 transition">
+                    完全版を見る →
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- イベント情報 -->
+    <section id="events" class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-black mb-8 flex items-center">
+                <span class="bg-pokemon-yellow text-pokemon-dark px-4 py-2 rounded-lg mr-4">イベント</span>
+                開催中・開催予定
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- 開催中 -->
+                <div class="bg-gradient-to-br from-yellow-400 to-orange-500 text-white rounded-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-2xl font-bold">コミュニティ・デイ</h3>
+                        <span class="bg-white text-orange-500 px-3 py-1 rounded-full text-sm font-bold">開催中</span>
+                    </div>
+                    <div class="flex items-center mb-4">
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/133.png" 
+                             alt="イーブイ" class="w-24 h-24 mr-4">
+                        <div>
+                            <p class="text-lg font-bold">イーブイ大量発生！</p>
+                            <p>特別な技「とっておき」を覚える</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-3">
+                        <p class="text-sm mb-1">開催期間：1月15日(土) 11:00-17:00</p>
+                        <p class="text-sm">ボーナス：捕獲時のXP3倍、お香の効果3時間</p>
+                    </div>
+                </div>
+
+                <!-- 開催予定 -->
+                <div class="bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-lg p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-2xl font-bold">レイドバトル・デイ</h3>
+                        <span class="bg-white text-purple-600 px-3 py-1 rounded-full text-sm font-bold">1/22開始</span>
+                    </div>
+                    <div class="flex items-center mb-4">
+                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/248.png" 
+                             alt="バンギラス" class="w-24 h-24 mr-4">
+                        <div>
+                            <p class="text-lg font-bold">バンギラス登場！</p>
+                            <p>色違い確率アップ</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-3">
+                        <p class="text-sm mb-1">開催期間：1月22日(土) 14:00-17:00</p>
+                        <p class="text-sm">ボーナス：レイドパス5枚無料配布</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PvPランキング -->
+    <section id="pvp" class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-black mb-8 flex items-center">
+                <span class="bg-pokemon-blue text-white px-4 py-2 rounded-lg mr-4">PvP</span>
+                GOバトルリーグ最強ランキング
+            </h2>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- スーパーリーグ -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold mb-4 text-center">スーパーリーグ (CP1500以下)</h3>
+                    <ol class="space-y-3">
+                        <li class="flex items-center">
+                            <span class="text-2xl font-bold text-yellow-500 mr-3">1</span>
+                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/184.png" 
+                                 alt="マリルリ" class="w-12 h-12 mr-3">
+                            <div>
+                                <p class="font-bold">マリルリ</p>
+                                <p class="text-sm text-gray-600">あわ / れいとうビーム・じゃれつく</p>
+                            </div>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-2xl font-bold text-gray-400 mr-3">2</span>
+                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/663.png" 
+                                 alt="ファイアロー" class="w-12 h-12 mr-3">
+                            <div>
+                                <p class="font-bold">ファイアロー</p>
+                                <p class="text-sm text-gray-600">やきつくす / ニトロチャージ・ブレイブバード</p>
+                            </div>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-2xl font-bold text-orange-600 mr-3">3</span>
+                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png" 
+                                 alt="カメックス" class="w-12 h-12 mr-3">
+                            <div>
+                                <p class="font-bold">カメックス</p>
+                                <p class="text-sm text-gray-600">みずでっぽう / ハイドロカノン・れいとうビーム</p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- ハイパーリーグ -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold mb-4 text-center">ハイパーリーグ (CP2500以下)</h3>
+                    <ol class="space-y-3">
+                        <li class="flex items-center">
+                            <span class="text-2xl font-bold text-yellow-500 mr-3">1</span>
+                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/487.png" 
+                                 alt="ギラティナ" class="w-12 h-12 mr-3">
+                            <div>
+                                <p class="font-bold">ギラティナ(アナザー)</p>
+                                <p class="text-sm text-gray-600">シャドークロー / ドラゴンクロー・げんしのちから</p>
+                            </div>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-2xl font-bold text-gray-400 mr-3">2</span>
+                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/260.png" 
+                                 alt="ラグラージ" class="w-12 h-12 mr-3">
+                            <div>
+                                <p class="font-bold">ラグラージ</p>
+                                <p class="text-sm text-gray-600">マッドショット / ハイドロカノン・じしん</p>
+                            </div>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-2xl font-bold text-orange-600 mr-3">3</span>
+                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/149.png" 
+                                 alt="カイリュー" class="w-12 h-12 mr-3">
+                            <div>
+                                <p class="font-bold">カイリュー</p>
+                                <p class="text-sm text-gray-600">りゅうのいぶき / ドラゴンクロー・ぼうふう</p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- マスターリーグ -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold mb-4 text-center">マスターリーグ (CP無制限)</h3>
+                    <ol class="space-y-3">
+                        <li class="flex items-center">
+                            <span class="text-2xl font-bold text-yellow-500 mr-3">1</span>
+                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/484.png" 
+                                 alt="パルキア" class="w-12 h-12 mr-3">
+                            <div>
+                                <p class="font-bold">パルキア</p>
+                                <p class="text-sm text-gray-600">りゅうのいぶき / アクアテール・りゅうせいぐん</p>
+                            </div>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-2xl font-bold text-gray-400 mr-3">2</span>
+                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/483.png" 
+                                 alt="ディアルガ" class="w-12 h-12 mr-3">
+                            <div>
+                                <p class="font-bold">ディアルガ</p>
+                                <p class="text-sm text-gray-600">りゅうのいぶき / アイアンヘッド・りゅうせいぐん</p>
+                            </div>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-2xl font-bold text-orange-600 mr-3">3</span>
+                            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png" 
+                                 alt="ミュウツー" class="w-12 h-12 mr-3">
+                            <div>
+                                <p class="font-bold">ミュウツー</p>
+                                <p class="text-sm text-gray-600">サイコカッター / サイコブレイク・きあいだま</p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ツール -->
+    <section id="tools" class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-black mb-8">便利ツール</h2>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <a href="#" class="bg-gradient-to-br from-green-500 to-green-600 text-white rounded-lg p-6 hover:scale-105 transition">
+                    <div class="text-3xl mb-3">🧮</div>
+                    <h3 class="text-xl font-bold mb-2">個体値チェッカー</h3>
+                    <p>CPと評価から個体値を計算</p>
+                </a>
+                
+                <a href="#" class="bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-lg p-6 hover:scale-105 transition">
+                    <div class="text-3xl mb-3">🔄</div>
+                    <h3 class="text-xl font-bold mb-2">進化計算機</h3>
+                    <p>進化後のCPを予測</p>
+                </a>
+                
+                <a href="#" class="bg-gradient-to-br from-orange-500 to-red-500 text-white rounded-lg p-6 hover:scale-105 transition">
+                    <div class="text-3xl mb-3">⚔️</div>
+                    <h3 class="text-xl font-bold mb-2">ダメージ計算機</h3>
+                    <p>技のダメージをシミュレート</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- カード拡大表示モーダル -->
+    <div class="modal-overlay" id="cardModal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeCardModal()">×</button>
+            <img id="modalCardImage" src="" alt="">
+            <div class="modal-info">
+                <h3 id="modalCardTitle" class="text-xl font-bold mb-2"></h3>
+                <p id="modalCardDescription" class="text-gray-300"></p>
+                <p class="text-sm text-gray-400 mt-2">マウスドラッグで角度を変えられます</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer class="bg-gray-900 text-white py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="mb-4">ポケポケ完全攻略ガイド - 最強トレーナーを目指そう！</p>
+            <p class="text-sm text-gray-400">© 2024 PokeGuide. Pokémon Card Game Pocket is © of Niantic, Inc.</p>
+        </div>
+    </footer>
+
+    <script>
+        // カード拡大表示機能
+        let isDragging = false;
+        let startX = 0;
+        let startY = 0;
+        let currentRotationX = 0;
+        let currentRotationY = 0;
+
+        function openCardModal(imageSrc, title, description) {
+            const modal = document.getElementById('cardModal');
+            const modalImage = document.getElementById('modalCardImage');
+            const modalTitle = document.getElementById('modalCardTitle');
+            const modalDescription = document.getElementById('modalCardDescription');
+            
+            modalImage.src = imageSrc;
+            modalTitle.textContent = title;
+            modalDescription.textContent = description;
+            
+            // リセット
+            currentRotationX = 0;
+            currentRotationY = 0;
+            modalImage.style.transform = 'rotateX(0deg) rotateY(0deg)';
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCardModal() {
+            const modal = document.getElementById('cardModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // マウスドラッグでカード回転
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalCard = document.querySelector('.modal-card');
+            const modalImage = document.getElementById('modalCardImage');
+            
+            modalCard.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                modalCard.style.cursor = 'grabbing';
+            });
+            
+            document.addEventListener('mousemove', function(e) {
+                if (!isDragging) return;
+                
+                const deltaX = e.clientX - startX;
+                const deltaY = e.clientY - startY;
+                
+                currentRotationY += deltaX * 0.5;
+                currentRotationX -= deltaY * 0.5;
+                
+                // 回転の制限
+                currentRotationX = Math.max(-45, Math.min(45, currentRotationX));
+                
+                modalImage.style.transform = `perspective(1000px) rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
+                
+                startX = e.clientX;
+                startY = e.clientY;
+            });
+            
+            document.addEventListener('mouseup', function() {
+                isDragging = false;
+                modalCard.style.cursor = 'grab';
+            });
+        });
+
+        // モーダル外クリックで閉じる
+        document.getElementById('cardModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCardModal();
+            }
+        });
+
+        // ESCキーで閉じる
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeCardModal();
+            }
+        });
+
+        // 検索機能
+        document.querySelector('input[type="text"]').addEventListener('input', function(e) {
+            // 検索機能の実装
+            console.log('検索:', e.target.value);
+        });
+
+        // スムーススクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

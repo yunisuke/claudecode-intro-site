@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS Modern - 次世代3Dインタラクション</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Noto Sans JP', 'sans-serif'],
+                    },
+                    animation: {
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        'gradient-x': {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            }
+                        },
+                        'float': {
+                            '0%, 100%': {
+                                transform: 'translateY(0px)'
+                            },
+                            '50%': {
+                                transform: 'translateY(-20px)'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5),
+                        0 0 40px rgba(102, 126, 234, 0.3),
+                        0 0 60px rgba(102, 126, 234, 0.1);
+        }
+        
+        .hover-3d {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-3d:hover {
+            transform: perspective(1000px) rotateY(5deg) scale(1.05);
+        }
+        
+        @keyframes glitch {
+            0% {
+                text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+                            -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+                            0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            14% {
+                text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+                            -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+                            0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            15% {
+                text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+                            0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+                            -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            49% {
+                text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+                            0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+                            -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            50% {
+                text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+                            0.05em 0 0 rgba(0, 255, 0, 0.75),
+                            0 -0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            99% {
+                text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+                            0.05em 0 0 rgba(0, 255, 0, 0.75),
+                            0 -0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+            100% {
+                text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75),
+                            -0.025em -0.025em 0 rgba(0, 255, 0, 0.75),
+                            -0.025em -0.05em 0 rgba(0, 0, 255, 0.75);
+            }
+        }
+        
+        .glitch {
+            animation: glitch 0.5s infinite;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body class="gradient-bg text-white font-sans custom-scrollbar">
+    <!-- 3D Canvas Container -->
+    <div id="canvas-container"></div>
+    
+    <!-- Navigation -->
+    <nav class="content-layer glass-effect fixed top-0 w-full z-50 py-4 px-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-2xl font-bold">
+                <span class="text-gradient">NEXUS</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#features" class="hover:text-purple-400 transition">Features</a>
+                <a href="#showcase" class="hover:text-purple-400 transition">Showcase</a>
+                <a href="#about" class="hover:text-purple-400 transition">About</a>
+                <a href="#contact" class="hover:text-purple-400 transition">Contact</a>
+            </div>
+            <button class="glass-effect px-6 py-2 rounded-full hover:bg-white/10 transition">
+                Get Started
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="content-layer min-h-screen flex items-center justify-center px-6">
+        <div class="text-center max-w-4xl mx-auto">
+            <h1 class="text-6xl md:text-8xl font-black mb-6 animate-float">
+                <span class="text-gradient">NEXUS</span>
+                <span class="block text-3xl md:text-4xl mt-4 text-gray-300">
+                    次世代3Dインタラクション
+                </span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400 mb-8 max-w-2xl mx-auto">
+                マウスを動かして、新しい体験を始めよう
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="glass-effect neon-glow px-8 py-4 rounded-full hover:bg-white/10 transition transform hover:scale-105">
+                    体験を開始
+                </button>
+                <button class="border border-purple-500 px-8 py-4 rounded-full hover:bg-purple-500/20 transition">
+                    詳細を見る
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section id="features" class="content-layer py-20 px-6">
+        <div class="container mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16">
+                <span class="text-gradient">主な機能</span>
+            </h2>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass-effect p-8 rounded-2xl hover-3d">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">3Dビジュアライゼーション</h3>
+                    <p class="text-gray-400">
+                        高度な3D技術により、データや情報を直感的に理解できる形で表現します。
+                    </p>
+                </div>
+                
+                <div class="glass-effect p-8 rounded-2xl hover-3d">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">インタラクティブ操作</h3>
+                    <p class="text-gray-400">
+                        マウスやタッチ操作で自由に3D空間を探索し、新しい発見を楽しめます。
+                    </p>
+                </div>
+                
+                <div class="glass-effect p-8 rounded-2xl hover-3d">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center mb-6">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">高速レンダリング</h3>
+                    <p class="text-gray-400">
+                        最新のWebGL技術により、スムーズで美しい3D表現を実現します。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Showcase Section -->
+    <section id="showcase" class="content-layer py-20 px-6">
+        <div class="container mx-auto">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-16">
+                <span class="text-gradient">ショーケース</span>
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="glass-effect p-8 rounded-2xl">
+                    <h3 class="text-2xl font-bold mb-4">データビジュアライゼーション</h3>
+                    <p class="text-gray-400 mb-6">
+                        複雑なデータセットを3D空間で視覚化し、パターンやトレンドを直感的に把握できます。
+                    </p>
+                    <div class="aspect-video bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-xl flex items-center justify-center">
+                        <span class="text-gray-500">3D Visualization Demo</span>
+                    </div>
+                </div>
+                
+                <div class="glass-effect p-8 rounded-2xl">
+                    <h3 class="text-2xl font-bold mb-4">プロダクトショーケース</h3>
+                    <p class="text-gray-400 mb-6">
+                        製品を360度から観察でき、詳細な構造や機能を理解することができます。
+                    </p>
+                    <div class="aspect-video bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-xl flex items-center justify-center">
+                        <span class="text-gray-500">Product 3D View</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Section -->
+    <section class="content-layer py-20 px-6">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-8">
+                <span class="text-gradient">未来の体験を今すぐ</span>
+            </h2>
+            <p class="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
+                革新的な3Dインタラクションで、あなたのプロジェクトを次のレベルへ
+            </p>
+            <button class="glass-effect neon-glow px-10 py-4 rounded-full text-lg font-bold hover:bg-white/10 transition transform hover:scale-105">
+                今すぐ始める
+            </button>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="content-layer glass-effect py-8 px-6 mt-20">
+        <div class="container mx-auto text-center text-gray-400">
+            <p>&copy; 2024 NEXUS Modern. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <!-- Three.js Script -->
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 5, 5);
+        scene.add(directionalLight);
+        
+        const pointLight = new THREE.PointLight(0x667eea, 2, 100);
+        pointLight.position.set(0, 0, 0);
+        scene.add(pointLight);
+        
+        // Create geometric shapes
+        const shapes = [];
+        
+        // Torus Knot
+        const torusKnotGeometry = new THREE.TorusKnotGeometry(2, 0.5, 100, 16);
+        const torusKnotMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x667eea,
+            metalness: 0.7,
+            roughness: 0.2,
+            clearcoat: 1,
+            clearcoatRoughness: 0.1,
+        });
+        const torusKnot = new THREE.Mesh(torusKnotGeometry, torusKnotMaterial);
+        torusKnot.position.set(0, 0, 0);
+        scene.add(torusKnot);
+        shapes.push(torusKnot);
+        
+        // Icosahedron
+        const icosahedronGeometry = new THREE.IcosahedronGeometry(1.5, 0);
+        const icosahedronMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x764ba2,
+            metalness: 0.8,
+            roughness: 0.3,
+            clearcoat: 0.5,
+        });
+        const icosahedron = new THREE.Mesh(icosahedronGeometry, icosahedronMaterial);
+        icosahedron.position.set(-5, 2, -3);
+        scene.add(icosahedron);
+        shapes.push(icosahedron);
+        
+        // Octahedron
+        const octahedronGeometry = new THREE.OctahedronGeometry(1.2, 0);
+        const octahedronMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xf093fb,
+            metalness: 0.6,
+            roughness: 0.4,
+            clearcoat: 0.8,
+        });
+        const octahedron = new THREE.Mesh(octahedronGeometry, octahedronMaterial);
+        octahedron.position.set(5, -2, -3);
+        scene.add(octahedron);
+        shapes.push(octahedron);
+        
+        // Wireframe Sphere
+        const sphereGeometry = new THREE.SphereGeometry(1.8, 32, 32);
+        const sphereWireframe = new THREE.WireframeGeometry(sphereGeometry);
+        const sphereLines = new THREE.LineSegments(sphereWireframe);
+        sphereLines.material.color.setHex(0x667eea);
+        sphereLines.material.opacity = 0.5;
+        sphereLines.material.transparent = true;
+        sphereLines.position.set(-4, -3, -5);
+        scene.add(sphereLines);
+        shapes.push(sphereLines);
+        
+        // Particle system
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1000;
+        const positions = new Float32Array(particlesCount * 3);
+        
+        for (let i = 0; i < particlesCount * 3; i++) {
+            positions[i] = (Math.random() - 0.5) * 20;
+        }
+        
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        
+        const particlesMaterial = new THREE.PointsMaterial({
+            color: 0x667eea,
+            size: 0.05,
+            opacity: 0.6,
+            transparent: true,
+        });
+        
+        const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particles);
+        
+        // Camera position
+        camera.position.z = 10;
+        
+        // Mouse movement variables
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetX = 0;
+        let targetY = 0;
+        
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+        
+        // Mouse move handler
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - windowHalfX) / windowHalfX;
+            mouseY = (event.clientY - windowHalfY) / windowHalfY;
+        });
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Smooth mouse follow
+            targetX += (mouseX - targetX) * 0.05;
+            targetY += (mouseY - targetY) * 0.05;
+            
+            // Rotate main shape
+            torusKnot.rotation.x += 0.005;
+            torusKnot.rotation.y += 0.005;
+            
+            // Rotate other shapes
+            icosahedron.rotation.x += 0.01;
+            icosahedron.rotation.y -= 0.005;
+            
+            octahedron.rotation.x -= 0.008;
+            octahedron.rotation.z += 0.01;
+            
+            sphereLines.rotation.y += 0.003;
+            sphereLines.rotation.z -= 0.002;
+            
+            // Particle animation
+            particles.rotation.y += 0.0005;
+            particles.rotation.x += 0.0003;
+            
+            // Camera movement based on mouse
+            camera.position.x = targetX * 3;
+            camera.position.y = -targetY * 3;
+            camera.lookAt(scene.position);
+            
+            // Float animation for shapes
+            shapes.forEach((shape, index) => {
+                shape.position.y += Math.sin(Date.now() * 0.001 + index) * 0.003;
+            });
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Scroll effect
+        let scrollY = 0;
+        window.addEventListener('scroll', () => {
+            scrollY = window.scrollY;
+            // Move 3D objects based on scroll
+            torusKnot.position.z = scrollY * -0.001;
+            shapes.forEach((shape, index) => {
+                shape.position.z = shape.position.z + scrollY * -0.0005 * (index + 1);
+            });
+        });
+    </script>
+</body>
+</html>
