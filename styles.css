@@ -133,29 +133,3 @@ body {
         padding: 12px;
     }
 }
-
-
-/* レスポンシブデザイン */
-@media (max-width: 768px) {
-    .apology-section h1 {
-        font-size: 2rem;
-    }
-    
-    .apology-content p {
-        font-size: 1rem;
-    }
-    
-    .features-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    
-    .features-section h2 {
-        font-size: 2rem;
-    }
-    
-    .usage-section h3,
-    .benefits h3 {
-        font-size: 1.5rem;
-    }
-}
