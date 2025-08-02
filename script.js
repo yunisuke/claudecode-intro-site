@@ -1,35 +1,5 @@
-// スムーススクロール機能
-function scrollToFeatures() {
-    const featuresSection = document.getElementById('features');
-    featuresSection.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-    });
-}
-
 // ページ読み込み時のアニメーション
 document.addEventListener('DOMContentLoaded', function() {
-    // 謝罪セクションのフェードイン
-    const apologyContent = document.querySelector('.apology-content');
-    setTimeout(() => {
-        apologyContent.style.opacity = '0';
-        apologyContent.style.transform = 'translateY(20px)';
-        apologyContent.style.transition = 'opacity 1s ease, transform 1s ease';
-        
-        setTimeout(() => {
-            apologyContent.style.opacity = '1';
-            apologyContent.style.transform = 'translateY(0)';
-        }, 100);
-    }, 100);
-
-    // スクロールボタンのアニメーション
-    const scrollBtn = document.querySelector('.scroll-btn');
-    setInterval(() => {
-        scrollBtn.style.transform = 'translateY(5px)';
-        setTimeout(() => {
-            scrollBtn.style.transform = 'translateY(0)';
-        }, 500);
-    }, 2000);
 
     // 機能カードの表示アニメーション
     const observerOptions = {

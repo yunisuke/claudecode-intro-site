@@ -17,62 +17,12 @@ body {
     margin: 0 auto;
 }
 
-/* 謝罪セクション */
-.apology-section {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 40px 20px;
-    text-align: center;
-}
-
-.apology-section h1 {
-    font-size: 2.5rem;
-    margin-bottom: 30px;
-    font-weight: 700;
-}
-
-.apology-content {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.apology-content p {
-    font-size: 1.2rem;
-    margin-bottom: 20px;
-    line-height: 1.8;
-}
-
-.apology-content strong {
-    color: #ffd700;
-}
-
-.scroll-btn {
-    margin-top: 40px;
-    padding: 15px 30px;
-    font-size: 1.1rem;
-    background-color: white;
-    color: #667eea;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
-}
-
-.scroll-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
 
 /* ClaudeCode紹介セクション */
 .features-section {
     padding: 80px 20px;
     background-color: white;
+    min-height: 100vh;
 }
 
 .features-section h2 {
@@ -93,118 +43,97 @@ body {
 }
 
 /* 機能グリッド */
-.features-grid {
+
+
+
+.usage-examples {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 30px;
-    margin-bottom: 60px;
-}
-
-.feature-card {
-    background: #f8f9fa;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-}
-
-.feature-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    color: #667eea;
-}
-
-.feature-card p {
-    color: #666;
-    line-height: 1.6;
-}
-
-/* 使い方セクション */
-.usage-section {
-    margin: 60px 0;
-    padding: 40px;
-    background-color: #f8f9fa;
-    border-radius: 10px;
-}
-
-.usage-section h3 {
-    font-size: 2rem;
-    margin-bottom: 30px;
-    text-align: center;
-    color: #333;
-}
-
-.code-example {
-    background-color: #2d2d2d;
-    color: #f8f8f2;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    overflow-x: auto;
-}
-
-.code-example pre {
-    margin: 0;
-}
-
-.code-example code {
-    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-    font-size: 1rem;
-    line-height: 1.5;
-}
-
-/* メリットセクション */
-.benefits {
-    margin-top: 60px;
-}
-
-.benefits h3 {
-    font-size: 2rem;
-    margin-bottom: 30px;
-    text-align: center;
-    color: #333;
-}
-
-.benefits ul {
-    list-style: none;
-    max-width: 600px;
+    gap: 40px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
-.benefits li {
-    padding: 15px 0;
-    padding-left: 40px;
-    position: relative;
-    font-size: 1.1rem;
-    color: #555;
+.example-card {
+    background: white;
+    padding: 35px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.1);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
 }
 
-.benefits li:before {
-    content: "✓";
-    position: absolute;
-    left: 0;
+.example-card:hover {
+    border-color: #667eea;
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.2);
+}
+
+.example-card h4 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
     color: #667eea;
-    font-size: 1.5rem;
-    font-weight: bold;
 }
 
-/* フッター */
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 40px 20px;
+.example-card ul {
+    margin: 20px 0;
+    padding-left: 25px;
 }
 
-footer p {
+.example-card li {
     margin-bottom: 10px;
-    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.6;
 }
+
+.example-card .result {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e8f5e9;
+    border-radius: 8px;
+    color: #2e7d32;
+    font-weight: 600;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .features-section {
+        padding: 40px 15px;
+    }
+    
+    .features-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .intro {
+        font-size: 1rem;
+        margin-bottom: 30px;
+    }
+    
+    .usage-examples {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .example-card {
+        padding: 25px;
+    }
+    
+    .example-card h4 {
+        font-size: 1.2rem;
+    }
+    
+    .example-card p,
+    .example-card li {
+        font-size: 0.95rem;
+    }
+    
+    .example-card .result {
+        font-size: 0.95rem;
+        padding: 12px;
+    }
+}
+
 
 /* レスポンシブデザイン */
 @media (max-width: 768px) {

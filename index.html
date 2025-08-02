@@ -3,87 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ClaudeCode紹介 - ミーティング欠席のお詫び</title>
+    <title>ClaudeCodeでやったこと</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <!-- 謝罪セクション -->
-        <section class="apology-section">
-            <h1>先日は申し訳ありませんでした！🙏</h1>
-            <div class="apology-content">
-                <p>先日のミーティング、参加できなくてごめんなさい！<br>
-                みんなの時間もらってたのに、急に欠席になっちゃって本当に申し訳ない💦</p>
-                <p>せめてもの罪滅ぼしに、話そうと思ってた<strong>ClaudeCode</strong>について<br>
-                まとめたので、よかったら見ていってください！</p>
-            </div>
-            <button class="scroll-btn" onclick="scrollToFeatures()">ClaudeCodeの紹介を見る ↓</button>
-        </section>
-
         <!-- ClaudeCode紹介セクション -->
-        <section class="features-section" id="features">
-            <h2>ClaudeCodeとは？</h2>
-            <p class="intro">ClaudeCodeは、Anthropic社が提供する強力なAIコーディングアシスタントツールです。</p>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <h3>🚀 高速な開発支援</h3>
-                    <p>AIとの対話を通じて、コードの生成、修正、リファクタリングを効率的に実行できます。</p>
-                </div>
+        <section class="features-section">
+            <h2>実際にClaudeCodeでやったこと</h2>
+            <p class="intro">最近ClaudeCodeを使って色々試してみたので、その実例を紹介します！</p>
                 
-                <div class="feature-card">
-                    <h3>📁 ファイル操作</h3>
-                    <p>ファイルの読み取り、書き込み、編集、検索など、プロジェクト全体を横断的に操作可能です。</p>
-                </div>
-                
-                <div class="feature-card">
-                    <h3>🔍 強力な検索機能</h3>
-                    <p>GrepやGlobツールを使用して、大規模なコードベースでも素早く必要な情報を見つけられます。</p>
-                </div>
-                
-                <div class="feature-card">
-                    <h3>🛠️ タスク管理</h3>
-                    <p>TodoWriteツールで複雑なタスクを細分化し、進捗を可視化しながら開発を進められます。</p>
-                </div>
-                
-                <div class="feature-card">
-                    <h3>🌐 Web連携</h3>
-                    <p>WebFetchやWebSearchツールで、最新の情報を取得しながら開発を進められます。</p>
-                </div>
-                
-                <div class="feature-card">
-                    <h3>💻 マルチプラットフォーム</h3>
-                    <p>Windows、Mac、Linuxで動作し、様々な開発環境に対応しています。</p>
-                </div>
-            </div>
+                <div class="usage-examples">
+                    <div class="example-card">
+                        <h4>1. モデルごとの性能評価 🔬</h4>
+                        <p>Opus4とSonnet4を使ってランディングページを作成し、各モデルの特徴を比較しました。</p>
+                        <ul>
+                            <li><strong>Opus4</strong>: より高度な推論が可能で、複雑なタスクに強い</li>
+                            <li><strong>Sonnet4</strong>: 高速でバランスが良く、日常的な開発タスクに最適</li>
+                        </ul>
+                        <p class="result">結果: どちらも短時間で高品質なLPを生成できました！</p>
+                    </div>
 
-            <div class="usage-section">
-                <h3>基本的な使い方</h3>
-                <div class="code-example">
-                    <pre><code>$ claude-code
-> ファイルを読んで内容を説明して
-> バグを修正して
-> 新しい機能を追加して</code></pre>
-                </div>
-                <p>自然な日本語で指示を出すだけで、AIが適切なツールを使って作業を実行します。</p>
-            </div>
+                    <div class="example-card">
+                        <h4>2. UnityMCPと連携させてUnity開発 🎮</h4>
+                        <p>ClaudeCodeとUnityMCPを連携させることで、Unity開発が爆速に！</p>
+                        <ul>
+                            <li>シーンの自動生成</li>
+                            <li>スクリプトの作成・編集</li>
+                            <li>アセットの管理</li>
+                        </ul>
+                        <p class="result">Unity開発の効率が大幅にアップしました！</p>
+                    </div>
 
-            <div class="benefits">
-                <h3>ClaudeCodeのメリット</h3>
-                <ul>
-                    <li>開発速度の大幅な向上</li>
-                    <li>コードレビューの自動化</li>
-                    <li>ドキュメント作成の効率化</li>
-                    <li>バグの早期発見と修正</li>
-                    <li>新しい技術の学習支援</li>
-                </ul>
-            </div>
+                    <div class="example-card">
+                        <h4>3. このページを作った！ 🌐</h4>
+                        <p>まさに今見ているこのページもClaudeCodeで作成しました。</p>
+                        <ul>
+                            <li>GitHubリポジトリの作成（gh CLIを使用）</li>
+                            <li>HTML/CSS/JavaScriptでのサイト制作</li>
+                            <li>GitHub Pagesでの公開設定</li>
+                        </ul>
+                        <p class="result">わずか30分程度で公開まで完了！</p>
+                    </div>
+                </div>
         </section>
 
-        <footer>
-            <p>改めて、ミーティング欠席について深くお詫び申し上げます。</p>
-            <p>ご不明な点がございましたら、お気軽にお問い合わせください。</p>
-        </footer>
     </div>
 
     <script src="script.js"></script>
