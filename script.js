@@ -29,4 +29,36 @@ document.addEventListener('DOMContentLoaded', function() {
     featureCards.forEach(card => {
         observer.observe(card);
     });
+
+    // 詳細リンクのスムーススクロール
+    const detailLinks = document.querySelectorAll('.detail-link');
+    detailLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                // スクロール位置を計算（少し上にマージンを設定）
+                const offsetTop = targetElement.offsetTop - 100;
+                
+                // スムーススクロール
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+                
+                // 詳細コンテンツをフェードイン
+                setTimeout(() => {
+                    targetElement.classList.add('visible');
+                }, 300);
+            }
+        });
+    });
+    
+    // 詳細セクションの監視
+    const detailContents = document.querySelectorAll('.detail-content');
+    detailContents.forEach(content => {
+        observer.observe(content);
+    });
 });

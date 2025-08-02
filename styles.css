@@ -61,6 +61,9 @@ body {
     box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
     border: 1px solid rgba(102, 126, 234, 0.1);
     transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .example-card:hover {
@@ -76,9 +79,15 @@ body {
     color: #667eea;
 }
 
+.example-card > p:first-of-type {
+    flex-grow: 0;
+    margin-bottom: 20px;
+}
+
 .example-card ul {
-    margin: 20px 0;
+    margin: 0 0 20px 0;
     padding-left: 25px;
+    flex-grow: 1;
 }
 
 .example-card li {
@@ -88,12 +97,18 @@ body {
 }
 
 .example-card .result {
-    margin-top: 20px;
-    padding: 15px;
+    margin-top: auto;
+    margin-bottom: 20px;
+    padding: 15px 20px;
     background-color: #e8f5e9;
     border-radius: 8px;
     color: #2e7d32;
     font-weight: 600;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 /* レスポンシブデザイン */
@@ -132,5 +147,87 @@ body {
     .example-card .result {
         font-size: 0.95rem;
         padding: 12px;
+    }
+}
+
+/* 詳細リンク */
+.detail-link {
+    display: inline-block;
+    margin-top: auto;
+    padding: 10px 20px;
+    background-color: #667eea;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+}
+
+.detail-link:hover {
+    background-color: #5a67d8;
+    transform: translateX(5px);
+}
+
+/* 詳細セクション */
+.detail-section {
+    background-color: #f8f9fa;
+    padding: 80px 20px;
+    margin-top: 80px;
+}
+
+.detail-content {
+    margin-bottom: 60px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+}
+
+.detail-content.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.detail-content h3 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid #667eea;
+}
+
+.detail-box {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    min-height: 200px;
+}
+
+.detail-box p {
+    color: #666;
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .detail-link {
+        display: block;
+        text-align: center;
+        margin-top: 15px;
+    }
+    
+    .detail-section {
+        padding: 40px 15px;
+        margin-top: 40px;
+    }
+    
+    .detail-content h3 {
+        font-size: 1.5rem;
+    }
+    
+    .detail-box {
+        padding: 25px;
     }
 }
