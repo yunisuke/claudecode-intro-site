@@ -406,11 +406,6 @@ body {
     animation: shine 3s infinite;
 }
 
-.conclusion-icon {
-    font-size: 3rem;
-    margin-bottom: 15px;
-    animation: pulse 2s infinite;
-}
 
 .conclusion-highlight h5 {
     font-size: 1.8rem;
@@ -480,7 +475,4 @@ body {
         font-size: 1.1rem;
     }
     
-    .conclusion-icon {
-        font-size: 2.5rem;
-    }
 }
