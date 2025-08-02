@@ -167,6 +167,31 @@
             .game-info {
                 font-size: 1rem;
             }
+            
+            .game-over {
+                width: 90vw;
+                max-width: 350px;
+                padding: 20px;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+            
+            .game-over h2 {
+                font-size: 1.5rem;
+                margin-bottom: 15px;
+            }
+            
+            .game-over p {
+                font-size: 1rem;
+                margin-bottom: 15px;
+            }
+            
+            .restart-btn {
+                padding: 10px 25px;
+                font-size: 1rem;
+                margin-top: 15px;
+            }
         }
     </style>
 </head>
@@ -186,10 +211,10 @@
 
         <div class="controls">
             <div class="control-section">
-                <strong>PC:</strong> 左右矢印キー: 移動 | スペースキー: 射撃
+                <strong>PC:</strong> 左右矢印キー: 移動 | 画面クリック: 移動 | 自動射撃
             </div>
             <div class="control-section">
-                <strong>スマホ:</strong> 画面タップで移動・射撃
+                <strong>スマホ:</strong> 左右スワイプで移動 | 自動射撃
             </div>
         </div>
 
@@ -236,16 +261,114 @@
         // 敵
         let enemies = [];
         let enemyDirection = 1;
-        let enemySpeed = 1;
+        let enemySpeed = 0.5;
 
         // タッチ制御用
         let touchStartX = 0;
         let lastTouchTime = 0;
+        
+        // 自動射撃用
+        let autoShootInterval;
+        let autoShootEnabled = false;
+        
+        // エフェクト用
+        let explosions = [];
+        let playerHitEffect = { active: false, time: 0 };
 
         // 初期化
         function init() {
             createEnemies();
+            startAutoShoot();
             gameLoop();
+        }
+        
+        // 自動射撃を開始
+        function startAutoShoot() {
+            autoShootEnabled = true;
+            autoShootInterval = setInterval(() => {
+                if (gameState.gameRunning && autoShootEnabled) {
+                    playerShoot();
+                }
+            }, 300); // 300ms間隔で自動射撃
+        }
+        
+        // 自動射撃を停止
+        function stopAutoShoot() {
+            autoShootEnabled = false;
+            if (autoShootInterval) {
+                clearInterval(autoShootInterval);
+            }
+        }
+        
+        // 爆発エフェクトを作成
+        function createExplosion(x, y, color = '#ff6b00') {
+            explosions.push({
+                x: x,
+                y: y,
+                size: 0,
+                maxSize: 30,
+                color: color,
+                life: 20,
+                maxLife: 20
+            });
+        }
+        
+        // プレイヤー被弾エフェクトを開始
+        function startPlayerHitEffect() {
+            playerHitEffect.active = true;
+            playerHitEffect.time = 20;
+        }
+        
+        // エフェクトを更新
+        function updateEffects() {
+            // 爆発エフェクト更新
+            explosions = explosions.filter(explosion => {
+                explosion.life--;
+                explosion.size = (1 - explosion.life / explosion.maxLife) * explosion.maxSize;
+                return explosion.life > 0;
+            });
+            
+            // プレイヤー被弾エフェクト更新
+            if (playerHitEffect.active) {
+                playerHitEffect.time--;
+                if (playerHitEffect.time <= 0) {
+                    playerHitEffect.active = false;
+                }
+            }
+        }
+        
+        // エフェクトを描画
+        function drawEffects() {
+            // 爆発エフェクトを描画
+            explosions.forEach(explosion => {
+                const alpha = explosion.life / explosion.maxLife;
+                ctx.save();
+                ctx.globalAlpha = alpha;
+                
+                // 爆発の円
+                ctx.fillStyle = explosion.color;
+                ctx.beginPath();
+                ctx.arc(explosion.x, explosion.y, explosion.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // 内側の白い光
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(explosion.x, explosion.y, explosion.size * 0.6, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+            });
+            
+            // プレイヤー被弾エフェクト（画面を赤く点滅）
+            if (playerHitEffect.active) {
+                const alpha = (playerHitEffect.time % 4 < 2) ? 0.3 : 0.1;
+                ctx.save();
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = '#ff0000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.restore();
+            }
         }
 
         // 敵を作成
@@ -386,6 +509,9 @@
                         playerBullets.splice(bulletIndex, 1);
                         gameState.score += 10;
                         scoreElement.textContent = gameState.score;
+                        
+                        // 敵撃破エフェクト
+                        createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#00ff88');
                     }
                 });
             });
@@ -400,6 +526,10 @@
                     enemyBullets.splice(bulletIndex, 1);
                     gameState.lives--;
                     livesElement.textContent = gameState.lives;
+                    
+                    // プレイヤー被弾エフェクト
+                    startPlayerHitEffect();
+                    createExplosion(player.x + player.width / 2, player.y + player.height / 2, '#ff4444');
                     
                     if (gameState.lives <= 0) {
                         gameOver();
@@ -419,7 +549,7 @@
                 gameState.score += 100;
                 scoreElement.textContent = gameState.score;
                 createEnemies();
-                enemySpeed += 0.5;
+                enemySpeed += 0.2;
             }
         }
 
@@ -443,7 +573,7 @@
             playerBullets = [];
             enemyBullets = [];
             enemyDirection = 1;
-            enemySpeed = 1;
+            enemySpeed = 0.5;
             
             scoreElement.textContent = '0';
             livesElement.textContent = '3';
@@ -482,6 +612,7 @@
             drawPlayer();
             drawEnemies();
             drawBullets();
+            drawEffects();
         }
 
         // ゲームループ
@@ -491,6 +622,7 @@
                 updateBullets();
                 updateEnemies();
                 checkCollisions();
+                updateEffects();
             }
             
             draw();
@@ -500,23 +632,27 @@
         // イベントリスナー
         document.addEventListener('keydown', (e) => {
             gameState.keys[e.code] = true;
-            if (e.code === 'Space' && gameState.gameRunning) {
-                e.preventDefault();
-                playerShoot();
-            }
+            // スペースキーでの射撃は削除（自動射撃のため）
         });
 
         document.addEventListener('keyup', (e) => {
             gameState.keys[e.code] = false;
         });
 
-        // タッチ制御
+        // スワイプ制御用の変数
+        let swipeStartX = 0;
+        let swipeStartY = 0;
+        let isSwipeDetected = false;
+        
+        // タッチ制御（スワイプベース）
         canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
             if (gameState.gameRunning) {
                 const touch = e.touches[0];
                 const rect = canvas.getBoundingClientRect();
-                touchStartX = touch.clientX - rect.left;
+                swipeStartX = touch.clientX - rect.left;
+                swipeStartY = touch.clientY - rect.top;
+                isSwipeDetected = false;
             }
         });
 
@@ -525,21 +661,32 @@
             if (gameState.gameRunning) {
                 const touch = e.touches[0];
                 const rect = canvas.getBoundingClientRect();
-                const touchX = touch.clientX - rect.left;
+                const currentX = touch.clientX - rect.left;
+                const currentY = touch.clientY - rect.top;
                 
-                // タッチ位置に基づいてプレイヤーを移動
-                const targetX = touchX - player.width / 2;
-                if (targetX >= 0 && targetX <= canvas.width - player.width) {
-                    player.x = targetX;
+                // スワイプ距離を計算
+                const deltaX = currentX - swipeStartX;
+                const deltaY = Math.abs(currentY - swipeStartY);
+                
+                // 横方向のスワイプが縦方向より大きく、一定距離以上の場合のみ移動
+                if (Math.abs(deltaX) > 20 && Math.abs(deltaX) > deltaY) {
+                    isSwipeDetected = true;
+                    const moveAmount = deltaX * 0.3; // スワイプの感度調整
+                    const newX = player.x + moveAmount;
+                    
+                    if (newX >= 0 && newX <= canvas.width - player.width) {
+                        player.x = newX;
+                    }
+                    
+                    // 新しいスワイプ開始点を更新
+                    swipeStartX = currentX;
                 }
             }
         });
 
         canvas.addEventListener('touchend', (e) => {
             e.preventDefault();
-            if (gameState.gameRunning) {
-                playerShoot();
-            }
+            // タッチエンドでは射撃しない（自動射撃のため）
         });
 
         // クリック制御（PC用）
@@ -554,7 +701,7 @@
                     player.x = targetX;
                 }
                 
-                playerShoot();
+                // クリックでは射撃しない（自動射撃のため）
             }
         });
 
