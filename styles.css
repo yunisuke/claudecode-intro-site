@@ -22,7 +22,6 @@ body {
 .features-section {
     padding: 80px 20px;
     background-color: white;
-    min-height: 100vh;
 }
 
 .features-section h2 {
@@ -80,7 +79,7 @@ body {
 }
 
 .example-card > p:first-of-type {
-    flex-grow: 0;
+    flex-grow: 1;
     margin-bottom: 20px;
 }
 
