@@ -380,7 +380,7 @@ body {
 
 .game-showcase h6 {
     font-size: 1.1rem;
-    color: #333;
+    color: #e0e6ed;
     margin-bottom: 20px;
     font-weight: 600;
 }
@@ -406,7 +406,7 @@ body {
 .screenshot-caption {
     margin-top: 15px;
     font-size: 0.95rem;
-    color: #666;
+    color: #94a3b8;
     font-style: italic;
 }
 
