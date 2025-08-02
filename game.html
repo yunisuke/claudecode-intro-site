@@ -214,7 +214,7 @@
                 <strong>PC:</strong> 左右矢印キー: 移動 | 画面クリック: 移動 | 自動射撃
             </div>
             <div class="control-section">
-                <strong>スマホ:</strong> 左右スワイプで移動 | 自動射撃
+                <strong>スマホ:</strong> 左右スワイプで自動移動開始 | 画面端まで移動 | 自動射撃
             </div>
         </div>
 
@@ -274,6 +274,9 @@
         // エフェクト用
         let explosions = [];
         let playerHitEffect = { active: false, time: 0 };
+        
+        // 自動移動用
+        let autoMovement = { active: false, direction: 0, speed: 3 };
 
         // 初期化
         function init() {
@@ -432,11 +435,24 @@
 
         // プレイヤーの更新
         function updatePlayer() {
+            // キーボード操作（PC用）
             if (gameState.keys['ArrowLeft'] && player.x > 0) {
                 player.x -= player.speed;
+                autoMovement.active = false; // キーボード操作時は自動移動停止
             }
             if (gameState.keys['ArrowRight'] && player.x < canvas.width - player.width) {
                 player.x += player.speed;
+                autoMovement.active = false; // キーボード操作時は自動移動停止
+            }
+            
+            // 自動移動（スワイプ用）
+            if (autoMovement.active) {
+                const newX = player.x + (autoMovement.direction * autoMovement.speed);
+                if (newX >= 0 && newX <= canvas.width - player.width) {
+                    player.x = newX;
+                } else {
+                    autoMovement.active = false; // 画面端に到達したら停止
+                }
             }
         }
 
@@ -653,6 +669,7 @@
                 swipeStartX = touch.clientX - rect.left;
                 swipeStartY = touch.clientY - rect.top;
                 isSwipeDetected = false;
+                autoMovement.active = false; // タッチ開始時は自動移動停止
             }
         });
 
@@ -668,25 +685,23 @@
                 const deltaX = currentX - swipeStartX;
                 const deltaY = Math.abs(currentY - swipeStartY);
                 
-                // 横方向のスワイプが縦方向より大きく、一定距離以上の場合のみ移動
-                if (Math.abs(deltaX) > 20 && Math.abs(deltaX) > deltaY) {
+                // 横方向のスワイプが縦方向より大きく、一定距離以上の場合
+                if (Math.abs(deltaX) > 30 && Math.abs(deltaX) > deltaY) {
                     isSwipeDetected = true;
-                    const moveAmount = deltaX * 0.3; // スワイプの感度調整
-                    const newX = player.x + moveAmount;
                     
-                    if (newX >= 0 && newX <= canvas.width - player.width) {
-                        player.x = newX;
-                    }
-                    
-                    // 新しいスワイプ開始点を更新
-                    swipeStartX = currentX;
+                    // スワイプ方向に基づいて自動移動を開始
+                    autoMovement.active = true;
+                    autoMovement.direction = deltaX > 0 ? 1 : -1; // 右なら1、左なら-1
                 }
             }
         });
 
         canvas.addEventListener('touchend', (e) => {
             e.preventDefault();
-            // タッチエンドでは射撃しない（自動射撃のため）
+            // スワイプが検出されていない場合は自動移動を停止
+            if (!isSwipeDetected) {
+                autoMovement.active = false;
+            }
         });
 
         // クリック制御（PC用）
