@@ -851,7 +851,7 @@
             <div class="modal-info">
                 <h3 id="modalCardTitle" class="text-xl font-bold mb-2"></h3>
                 <p id="modalCardDescription" class="text-gray-300"></p>
-                <p class="text-sm text-gray-400 mt-2">マウスドラッグで角度を変えられます</p>
+                <p class="text-sm text-gray-400 mt-2">ドラッグで角度を変えられます</p>
             </div>
         </div>
     </div>
@@ -912,6 +912,9 @@
             
             // タッチイベント
             modalCard.addEventListener('touchstart', function(e) {
+                // ×ボタンのクリックは除外
+                if (e.target.classList.contains('modal-close')) return;
+                
                 isDragging = true;
                 const touch = e.touches[0];
                 startX = touch.clientX;
