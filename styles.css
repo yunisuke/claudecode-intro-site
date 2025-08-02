@@ -6,45 +6,167 @@
 }
 
 body {
-    font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+    font-family: 'Space Grotesk', 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
     line-height: 1.6;
     color: #e0e6ed;
-    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+    background: #0a0a0f;
     min-height: 100vh;
     font-weight: 400;
+    overflow-x: hidden;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 80%, rgba(45, 212, 191, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
 }
 
 
 /* ClaudeCode紹介セクション */
 .features-section {
-    padding: 80px 20px;
-    background: rgba(15, 15, 35, 0.9);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(45, 212, 191, 0.1);
+    padding: 100px 20px;
+    background: rgba(10, 10, 20, 0.6);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(45, 212, 191, 0.05);
+    position: relative;
+    overflow: hidden;
 }
 
-.features-section h2 {
-    font-size: 2.5rem;
+.features-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        from 0deg at 50% 50%,
+        transparent 0deg,
+        rgba(45, 212, 191, 0.1) 60deg,
+        transparent 120deg,
+        rgba(139, 92, 246, 0.1) 180deg,
+        transparent 240deg,
+        rgba(14, 165, 233, 0.1) 300deg,
+        transparent 360deg
+    );
+    animation: rotateConic 20s linear infinite;
+    opacity: 0.5;
+}
+
+@keyframes rotateConic {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ヒーローセクション */
+.hero-title-wrapper {
     text-align: center;
-    margin-bottom: 20px;
-    color: #2dd4bf;
-    text-shadow: 0 0 20px rgba(45, 212, 191, 0.5);
-    font-weight: 700;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.hero-title {
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
+}
+
+.title-line {
+    display: flex;
+    justify-content: center;
+    gap: 0.3em;
+    flex-wrap: wrap;
+}
+
+.title-word {
+    display: inline-block;
+    position: relative;
+    background: linear-gradient(135deg, #e0e6ed 0%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: titleFloat 3s ease-in-out infinite;
+}
+
+.title-word.accent {
+    background: linear-gradient(135deg, #2dd4bf 0%, #0891b2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 30px rgba(45, 212, 191, 0.5));
+}
+
+.title-word:nth-child(1) { animation-delay: 0s; }
+.title-word:nth-child(2) { animation-delay: 0.1s; }
+.title-word:nth-child(3) { animation-delay: 0.2s; }
+
+@keyframes titleFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.title-decoration {
+    position: absolute;
+    width: 150px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #2dd4bf, transparent);
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: decorationPulse 2s ease-in-out infinite;
+}
+
+@keyframes decorationPulse {
+    0%, 100% { width: 150px; opacity: 0.8; }
+    50% { width: 200px; opacity: 1; }
 }
 
 .intro {
     text-align: center;
-    font-size: 1.2rem;
-    color: #94a3b8;
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: #cbd5e1;
     margin-bottom: 60px;
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+    position: relative;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease forwards;
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* 機能グリッド */
@@ -57,36 +179,84 @@ body {
     gap: 40px;
     max-width: 1200px;
     margin: 0 auto;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease forwards;
+    animation-delay: 0.5s;
 }
 
 .example-card {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%);
+    background: rgba(15, 15, 25, 0.6);
     padding: 35px;
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(45, 212, 191, 0.2);
-    transition: all 0.3s ease;
+    border-radius: 20px;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(45, 212, 191, 0.1);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     flex-direction: column;
     height: 100%;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px) saturate(180%);
     position: relative;
     overflow: hidden;
 }
 
+.example-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(45, 212, 191, 0.5), 
+        transparent
+    );
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.example-card:hover::before {
+    transform: translateX(100%);
+}
+
 .example-card:hover {
-    border-color: #2dd4bf;
-    transform: translateY(-5px);
-    box-shadow: 0 16px 40px rgba(45, 212, 191, 0.2), 0 0 30px rgba(45, 212, 191, 0.1);
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%);
+    border-color: rgba(45, 212, 191, 0.3);
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 
+        0 20px 60px rgba(45, 212, 191, 0.2), 
+        0 0 40px rgba(45, 212, 191, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    background: rgba(20, 20, 35, 0.7);
 }
 
 .example-card h4 {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     margin-bottom: 20px;
-    color: #2dd4bf;
-    font-weight: 600;
-    text-shadow: 0 0 10px rgba(45, 212, 191, 0.3);
+    background: linear-gradient(135deg, #2dd4bf 0%, #0891b2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    position: relative;
+    display: inline-block;
+}
+
+.example-card h4::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background: linear-gradient(90deg, #2dd4bf, transparent);
+    transition: width 0.3s ease;
+}
+
+.example-card:hover h4::after {
+    width: 100%;
 }
 
 .example-card > p:first-of-type {
@@ -112,29 +282,64 @@ body {
     margin-top: auto;
     margin-bottom: 20px;
     padding: 15px 20px;
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%);
     border: 1px solid rgba(34, 197, 94, 0.3);
-    border-radius: 8px;
-    color: #22c55e;
-    font-weight: 600;
+    border-radius: 12px;
+    color: #10b981;
+    font-weight: 700;
     height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    box-shadow: 0 0 20px rgba(34, 197, 94, 0.1);
+    box-shadow: 
+        0 4px 20px rgba(34, 197, 94, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+    backdrop-filter: blur(5px);
+}
+
+.example-card .result::before {
+    content: '✨';
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% { 
+        transform: scale(1) rotate(0deg);
+        opacity: 0.6;
+    }
+    50% { 
+        transform: scale(1.2) rotate(180deg);
+        opacity: 1;
+    }
 }
 
 /* おまけゲームセクション */
 .game-section {
-    margin-top: 30px;
-    padding: 15px;
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
-    border: 1px solid rgba(139, 92, 246, 0.2);
-    border-radius: 8px;
+    margin-top: 40px;
+    padding: 25px;
+    background: 
+        linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(168, 85, 247, 0.05) 100%),
+        rgba(15, 15, 25, 0.4);
+    border: 1px solid rgba(139, 92, 246, 0.15);
+    border-radius: 16px;
     text-align: center;
-    box-shadow: 0 2px 12px rgba(139, 92, 246, 0.06);
+    box-shadow: 
+        0 4px 20px rgba(139, 92, 246, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
 }
+
 
 .game-section h3 {
     font-size: 1.1rem;
@@ -262,26 +467,48 @@ body {
 
 /* 詳細リンク */
 .detail-link {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     margin-top: auto;
-    padding: 10px 20px;
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    color: white;
+    padding: 12px 24px;
+    background: rgba(37, 99, 235, 0.1);
+    color: #3b82f6;
     text-decoration: none;
-    border-radius: 6px;
+    border-radius: 12px;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     align-self: flex-start;
-    border: 1px solid rgba(37, 99, 235, 0.5);
-    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.1);
     position: relative;
     overflow: hidden;
 }
 
+.detail-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.4), transparent);
+    transition: left 0.6s ease;
+    transform: none;
+}
+
+.detail-link:hover::before {
+    left: 100%;
+}
+
 .detail-link:hover {
-    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
-    transform: translateX(5px);
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+    background: rgba(37, 99, 235, 0.2);
+    color: #60a5fa;
+    transform: translateX(10px) scale(1.05);
+    box-shadow: 
+        0 10px 30px rgba(37, 99, 235, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border-color: rgba(37, 99, 235, 0.4);
 }
 
 /* サンプルリンク */
@@ -314,8 +541,8 @@ body {
 
 .detail-content {
     margin-bottom: 60px;
-    opacity: 0;
-    transform: translateY(30px);
+    opacity: 1;
+    transform: translateY(0);
     transition: all 0.6s ease;
 }
 

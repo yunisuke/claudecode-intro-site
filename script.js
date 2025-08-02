@@ -25,8 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }, observerOptions);
 
     // 機能カードを監視
-    const featureCards = document.querySelectorAll('.feature-card');
-    featureCards.forEach(card => {
+    const exampleCards = document.querySelectorAll('.example-card');
+    exampleCards.forEach(card => {
         observer.observe(card);
     });
 
@@ -39,8 +39,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetElement = document.getElementById(targetId);
             
             if (targetElement) {
-                // スクロール位置を計算（少し上にマージンを設定）
-                const offsetTop = targetElement.offsetTop - 100;
+                // 親要素（detail-section）までの絶対位置を取得
+                const rect = targetElement.getBoundingClientRect();
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const offsetTop = rect.top + scrollTop - 100; // 100pxの余白を設定
                 
                 // スムーススクロール
                 window.scrollTo({
