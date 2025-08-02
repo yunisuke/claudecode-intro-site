@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ClaudeCodeでやったこと</title>
-    <link rel="stylesheet" href="styles.css?v=11">
+    <link rel="stylesheet" href="styles.css?v=13">
 </head>
 <body>
     <div class="container">
@@ -15,13 +15,14 @@
                 
                 <div class="usage-examples">
                     <div class="example-card">
-                        <h4>1. モデルごとの性能評価 🔬</h4>
-                        <p>Opus4とSonnet4を使ってランディングページを作成し、各モデルの特徴を比較しました。</p>
+                        <h4>1. サンプルLP制作 🎨</h4>
+                        <p>Opus4とSonnet4の性能比較から3Dインタラクション、ポケモンテーマまで、様々なランディングページを制作しました。</p>
                         <ul>
-                            <li><strong>Opus4</strong>: より高度な推論が可能で、複雑なタスクに強い</li>
-                            <li><strong>Sonnet4</strong>: 高速でバランスが良く、日常的な開発タスクに最適</li>
+                            <li><strong>モデル比較実験</strong>: Opus4 vs Sonnet4で同一テーマのLP制作</li>
+                            <li><strong>3D背景アニメーション</strong>: Three.jsを使った「ぐにょぐにょ」3D表現</li>
+                            <li><strong>インタラクティブ機能</strong>: カード回転機能付きポケモンサイト</li>
                         </ul>
-                        <p class="result">結果: どちらも短時間で高品質なLPを生成できました！</p>
+                        <p class="result">結果: 多彩なデザインと高度な機能を短時間で実現！</p>
                         <a href="#detail-1" class="detail-link">詳細を見る →</a>
                     </div>
 
@@ -56,15 +57,73 @@
         <section class="detail-section">
             <div class="container">
                 <div class="detail-content" id="detail-1">
-                    <h3>1. モデルごとの性能評価の詳細</h3>
+                    <h3>1. サンプルLP制作</h3>
                     <div class="detail-box">
-                        <p>Opus4とSonnet4を使って様々なテーマのランディングページを作成し、それぞれのモデルの特徴を比較しました。</p>
-                        <div class="detail-actions">
-                            <a href="LP/Sample/index_opus.html" class="sample-link" target="_blank">Opus4で作成したLP 🔗</a>
-                            <a href="LP/Sample/index_sonnet.html" class="sample-link" target="_blank">Sonnet4で作成したLP 🔗</a>
-                            <a href="LP/Sample/claude-master-lp.html" class="sample-link" target="_blank">Claude Masterテーマ 🔗</a>
-                            <a href="LP/3D/nexus-modern.html" class="sample-link" target="_blank">3Dインタラクション 🔗</a>
-                            <a href="LP/Pokemon/index.html" class="sample-link" target="_blank">ポケモンテーマLP 🔗</a>
+                        <div class="sample-analysis">
+                            <h4>Opus4 LP & Sonnet4 LP</h4>
+                            <p class="sample-desc">同一のテーマ「Claude Codeマスター講座」で2つのモデルの比較実験を実施</p>
+                            
+                            <div class="analysis-section">
+                                <h5>💡 やってみたかったこと</h5>
+                                <p>ClaudeCodeの主力モデルであるOpus4とSonnet4の実際の性能差を、同じ条件下で制作したランディングページを通じて客観的に比較検証すること。</p>
+                            </div>
+                            
+                            <div class="analysis-section">
+                                <h5>✅ 確認できたこと</h5>
+                                <p>予想に反して、両モデル間の性能差は思ったほど大きくありませんでした。デザインの完成度やクリエイティビティに関しては、ほぼ同等のクオリティを実現。ただし、Sonnet4で生成されたコードには軽微な不具合が含まれており、細かな品質面ではOpus4の方が安定していることが判明しました。</p>
+                            </div>
+                            
+                            <div class="sample-links">
+                                <h6>比較サンプル</h6>
+                                <div class="comparison-links">
+                                    <a href="LP/Sample/index_opus.html" class="sample-link" target="_blank">Opus4版を見る 🔗</a>
+                                    <a href="LP/Sample/index_sonnet.html" class="sample-link" target="_blank">Sonnet4版を見る 🔗</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sample-analysis">
+                            <h4>3Dインタラクション</h4>
+                            <p class="sample-desc">Three.jsを活用した3D背景アニメーション付きランディングページの制作実験</p>
+                            
+                            <div class="analysis-section">
+                                <h5>💡 やってみたかったこと</h5>
+                                <p>最近のモダンなWebサイトでよく見かける、背景で3Dオブジェクトが「ぐにょぐにょ」と動的にアニメーションするランディングページを実際に作成してみること。視覚的なインパクトと先進性を演出できるかを検証。</p>
+                            </div>
+                            
+                            <div class="analysis-section">
+                                <h5>✅ 確認できたこと</h5>
+                                <p>想像していたイメージ通りの3D背景アニメーションを実現することができました。謎の3Dオブジェクトが背景でぐにょぐにょと変形しながら動き回る、まさに「それっぽい」現代的なデザインが完成。ClaudeCodeでも高度な3D表現を含むWebサイトの制作が可能であることを確認できました。</p>
+                            </div>
+                            
+                            <div class="sample-links">
+                                <h6>サンプル</h6>
+                                <div class="comparison-links">
+                                    <a href="LP/3D/nexus-modern.html" class="sample-link" target="_blank">3D版を見る 🔗</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sample-analysis">
+                            <h4>ポケモンテーマLP</h4>
+                            <p class="sample-desc">インタラクティブなカード表示機能付きポケモン攻略サイトの制作</p>
+                            
+                            <div class="analysis-section">
+                                <h5>💡 やってみたかったこと</h5>
+                                <p>ユーザーがカードを選択すると拡大表示され、さらにタップやドラッグによって角度を自由に変更できるインタラクティブな機能を実装すること。カードを立体的に見ることで、まるで実物を手に取って眺めているような体験を提供したい。</p>
+                            </div>
+                            
+                            <div class="analysis-section">
+                                <h5>✅ 確認できたこと</h5>
+                                <p>想定していたカードの角度変更機能を完全に実現することができました。PC・スマホ両対応で、ドラッグ操作によってカードを3D空間で回転させることが可能。モーダル表示とタッチイベントの組み合わせにより、直感的で楽しいユーザーエクスペリエンスを提供できることを確認しました。</p>
+                            </div>
+                            
+                            <div class="sample-links">
+                                <h6>サンプル</h6>
+                                <div class="comparison-links">
+                                    <a href="LP/Pokemon/index.html" class="sample-link" target="_blank">ポケモン版を見る 🔗</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

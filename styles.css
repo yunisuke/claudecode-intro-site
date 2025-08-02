@@ -234,6 +234,59 @@ body {
     flex-wrap: wrap;
 }
 
+/* サンプル分析セクション */
+.sample-analysis {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.sample-analysis h4 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.sample-desc {
+    color: #666;
+    font-style: italic;
+    margin-bottom: 25px;
+    font-size: 1rem;
+}
+
+.analysis-section {
+    margin: 20px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.analysis-section h5 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.sample-links {
+    margin-top: 25px;
+}
+
+.sample-links h6 {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.comparison-links {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
     .detail-link {
