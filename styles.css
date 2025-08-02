@@ -287,6 +287,101 @@ body {
     flex-wrap: wrap;
 }
 
+/* 得意・苦手セクション */
+.strength-weakness {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.strength, .weakness {
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid;
+}
+
+.strength {
+    background-color: #f0f9ff;
+    border-color: #22c55e;
+}
+
+.weakness {
+    background-color: #fef3f2;
+    border-color: #ef4444;
+}
+
+.strength h6, .weakness h6 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.strength h6 {
+    color: #166534;
+}
+
+.weakness h6 {
+    color: #dc2626;
+}
+
+.strength ul, .weakness ul {
+    list-style: none;
+    padding: 0;
+}
+
+.strength li, .weakness li {
+    padding: 5px 0;
+    font-size: 0.95rem;
+}
+
+.strength li {
+    color: #166534;
+}
+
+.weakness li {
+    color: #dc2626;
+}
+
+/* ゲーム画像セクション */
+.game-showcase {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 2px solid #e9ecef;
+}
+
+.game-showcase h6 {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.game-screenshot {
+    text-align: center;
+}
+
+.screenshot-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border: 2px solid #e9ecef;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.screenshot-img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+}
+
+.screenshot-caption {
+    margin-top: 15px;
+    font-size: 0.95rem;
+    color: #666;
+    font-style: italic;
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
     .detail-link {
@@ -306,5 +401,10 @@ body {
     
     .detail-box {
         padding: 25px;
+    }
+    
+    .strength-weakness {
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
 }
