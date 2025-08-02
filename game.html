@@ -157,7 +157,8 @@
             
             .game-canvas {
                 width: 90vw !important;
-                height: 50vh !important;
+                height: calc(90vw * 0.75) !important; /* アスペクト比を維持 */
+                max-height: 60vh !important;
             }
             
             .controls {
@@ -192,6 +193,90 @@
                 font-size: 1rem;
                 margin-top: 15px;
             }
+            
+            .virtual-controller {
+                width: 90vw;
+                max-width: 300px;
+            }
+            
+            .control-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .control-center {
+                width: 80px;
+            }
+            
+            .control-label {
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* 疑似コントローラー */
+        .virtual-controller {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 20px auto;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%);
+            border: 2px solid rgba(45, 212, 191, 0.3);
+            border-radius: 15px;
+            width: 350px;
+            max-width: 90vw;
+            box-shadow: 0 4px 20px rgba(45, 212, 191, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .control-btn {
+            width: 70px;
+            height: 70px;
+            border: 2px solid rgba(45, 212, 191, 0.5);
+            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(45, 212, 191, 0.1) 0%, rgba(14, 165, 233, 0.1) 100%);
+            color: #2dd4bf;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+        
+        .control-btn:hover {
+            background: linear-gradient(135deg, rgba(45, 212, 191, 0.2) 0%, rgba(14, 165, 233, 0.2) 100%);
+            border-color: #2dd4bf;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(45, 212, 191, 0.3);
+        }
+        
+        .control-btn:active {
+            background: linear-gradient(135deg, rgba(45, 212, 191, 0.3) 0%, rgba(14, 165, 233, 0.3) 100%);
+            transform: scale(0.95);
+            box-shadow: 0 0 30px rgba(45, 212, 191, 0.5);
+        }
+        
+        .control-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100px;
+            text-align: center;
+        }
+        
+        .control-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-shadow: 0 0 5px rgba(45, 212, 191, 0.3);
         }
     </style>
 </head>
@@ -207,14 +292,23 @@
             <div class="lives">ライフ: <span id="lives">3</span></div>
         </div>
 
-        <canvas id="gameCanvas" class="game-canvas" width="600" height="400"></canvas>
+        <canvas id="gameCanvas" class="game-canvas" width="600" height="500"></canvas>
+
+        <!-- 疑似コントローラー -->
+        <div class="virtual-controller">
+            <button id="leftBtn" class="control-btn left-btn">◀</button>
+            <div class="control-center">
+                <span class="control-label">移動</span>
+            </div>
+            <button id="rightBtn" class="control-btn right-btn">▶</button>
+        </div>
 
         <div class="controls">
             <div class="control-section">
-                <strong>PC:</strong> 左右矢印キー: 移動 | 画面クリック: 移動 | 自動射撃
+                <strong>PC:</strong> 左右矢印キー or 下のボタン: 移動 | 自動射撃
             </div>
             <div class="control-section">
-                <strong>スマホ:</strong> 左右スワイプで自動移動開始 | 画面端まで移動 | 自動射撃
+                <strong>スマホ:</strong> 下のボタンタップ: 移動 | 自動射撃
             </div>
         </div>
 
@@ -247,7 +341,7 @@
         // プレイヤー
         const player = {
             x: canvas.width / 2 - 15,
-            y: canvas.height - 40,
+            y: canvas.height - 80, // スマホ操作スペース用に下げる
             width: 30,
             height: 20,
             speed: 5,
@@ -381,7 +475,7 @@
                 for (let col = 0; col < 10; col++) {
                     enemies.push({
                         x: col * 50 + 75,
-                        y: row * 40 + 50,
+                        y: row * 40 + 30, // 敵の位置を奥に移動
                         width: 30,
                         height: 20,
                         alive: true,
@@ -721,6 +815,55 @@
         });
 
         restartBtn.addEventListener('click', restart);
+
+        // 疑似コントローラーのイベント
+        const leftBtn = document.getElementById('leftBtn');
+        const rightBtn = document.getElementById('rightBtn');
+
+        // 左ボタンの制御
+        leftBtn.addEventListener('mousedown', () => {
+            autoMovement.active = true;
+            autoMovement.direction = -1;
+        });
+        leftBtn.addEventListener('mouseup', () => {
+            autoMovement.active = false;
+        });
+        leftBtn.addEventListener('mouseleave', () => {
+            autoMovement.active = false;
+        });
+
+        // 右ボタンの制御
+        rightBtn.addEventListener('mousedown', () => {
+            autoMovement.active = true;
+            autoMovement.direction = 1;
+        });
+        rightBtn.addEventListener('mouseup', () => {
+            autoMovement.active = false;
+        });
+        rightBtn.addEventListener('mouseleave', () => {
+            autoMovement.active = false;
+        });
+
+        // タッチイベント（スマホ用）
+        leftBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            autoMovement.active = true;
+            autoMovement.direction = -1;
+        });
+        leftBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            autoMovement.active = false;
+        });
+
+        rightBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            autoMovement.active = true;
+            autoMovement.direction = 1;
+        });
+        rightBtn.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            autoMovement.active = false;
+        });
 
         // ゲーム開始
         init();
