@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code - The Ultimate AI Coding Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="cursor-glow"></div>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="logo">
+                    <span class="logo-text">Claude<span class="accent">Code</span></span>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#demo">Demo</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#contact" class="cta-button">Get Started</a></li>
+                </ul>
+            </div>
+        </nav>
+        
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Claude Code</h1>
+                <h2 class="subtitle">The AI Pair Programmer That Actually Gets It</h2>
+                <p class="description">Transform your development workflow with intelligent code generation, 
+                real-time debugging, and seamless integration. Welcome to the future of coding.</p>
+                <div class="hero-buttons">
+                    <button class="primary-btn">Start Free Trial</button>
+                    <button class="secondary-btn">Watch Demo</button>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="500000">0</span>
+                        <span class="stat-label">Developers</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="10000000">0</span>
+                        <span class="stat-label">Lines of Code</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-target="99">0</span>%
+                        <span class="stat-label">Satisfaction</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="code-window">
+                    <div class="window-header">
+                        <div class="window-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <span class="window-title">claude_code.py</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><code class="typing-animation"></code></pre>
+                    </div>
+                </div>
+                <div class="floating-elements">
+                    <div class="float-element">⚡</div>
+                    <div class="float-element">🚀</div>
+                    <div class="float-element">💡</div>
+                    <div class="float-element">🔥</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="section-title">Supercharge Your Development</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Intelligent Code Completion</h3>
+                    <p>Context-aware suggestions that understand your entire codebase</p>
+                    <div class="feature-glow"></div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Real-time responses with zero lag, keeping up with your thoughts</p>
+                    <div class="feature-glow"></div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Smart Debugging</h3>
+                    <p>Instantly identify and fix bugs with detailed explanations</p>
+                    <div class="feature-glow"></div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Code Refactoring</h3>
+                    <p>Transform messy code into clean, maintainable masterpieces</p>
+                    <div class="feature-glow"></div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Multi-Language Support</h3>
+                    <p>Master of Python, JavaScript, Go, Rust, and 50+ languages</p>
+                    <div class="feature-glow"></div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure & Private</h3>
+                    <p>Your code stays yours. Enterprise-grade security built-in</p>
+                    <div class="feature-glow"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="demo-section">
+        <div class="container">
+            <h2 class="section-title">See The Magic In Action</h2>
+            <div class="demo-container">
+                <div class="demo-tabs">
+                    <button class="tab-btn active" data-tab="generate">Generate Code</button>
+                    <button class="tab-btn" data-tab="debug">Debug</button>
+                    <button class="tab-btn" data-tab="explain">Explain</button>
+                    <button class="tab-btn" data-tab="refactor">Refactor</button>
+                </div>
+                <div class="demo-content">
+                    <div class="tab-content active" id="generate">
+                        <div class="demo-code">
+                            <div class="prompt-box">
+                                <span class="prompt-label">You:</span>
+                                <p>Create a function to find prime numbers up to n</p>
+                            </div>
+                            <div class="response-box">
+                                <span class="response-label">Claude Code:</span>
+                                <pre><code>def find_primes(n):
+    """Find all prime numbers up to n using Sieve of Eratosthenes"""
+    if n < 2:
+        return []
+    
+    sieve = [True] * (n + 1)
+    sieve[0] = sieve[1] = False
+    
+    for i in range(2, int(n**0.5) + 1):
+        if sieve[i]:
+            for j in range(i*i, n + 1, i):
+                sieve[j] = False
+    
+    return [i for i in range(n + 1) if sieve[i]]</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="debug">
+                        <div class="demo-code">
+                            <div class="prompt-box">
+                                <span class="prompt-label">Your Code:</span>
+                                <pre><code>function getData() {
+    fetch('/api/data')
+    .then(data => console.log(data))
+}</code></pre>
+                            </div>
+                            <div class="response-box">
+                                <span class="response-label">Claude Code:</span>
+                                <p>🐛 Found 2 issues:</p>
+                                <p>1. Missing response.json() conversion</p>
+                                <p>2. No error handling</p>
+                                <pre><code>async function getData() {
+    try {
+        const response = await fetch('/api/data');
+        const data = await response.json();
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error('Failed to fetch data:', error);
+    }
+}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="explain">
+                        <div class="demo-code">
+                            <div class="prompt-box">
+                                <span class="prompt-label">Code to Explain:</span>
+                                <pre><code>const memoize = fn => {
+    const cache = {};
+    return (...args) => {
+        const key = JSON.stringify(args);
+        return cache[key] || (cache[key] = fn(...args));
+    };
+};</code></pre>
+                            </div>
+                            <div class="response-box">
+                                <span class="response-label">Claude Code:</span>
+                                <p>This is a <strong>memoization</strong> higher-order function that optimizes performance by caching function results.</p>
+                                <p><strong>How it works:</strong></p>
+                                <ul>
+                                    <li>Creates a cache object to store results</li>
+                                    <li>Returns a new function that checks cache before executing</li>
+                                    <li>Uses JSON.stringify to create unique keys from arguments</li>
+                                    <li>Returns cached result if available, otherwise computes and caches</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-content" id="refactor">
+                        <div class="demo-code">
+                            <div class="prompt-box">
+                                <span class="prompt-label">Original Code:</span>
+                                <pre><code>let result = [];
+for (let i = 0; i < users.length; i++) {
+    if (users[i].age > 18) {
+        result.push(users[i].name);
+    }
+}</code></pre>
+                            </div>
+                            <div class="response-box">
+                                <span class="response-label">Claude Code:</span>
+                                <p>✨ Refactored using modern JavaScript:</p>
+                                <pre><code>const result = users
+    .filter(user => user.age > 18)
+    .map(user => user.name);</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Code at Light Speed?</h2>
+                <p>Join thousands of developers who've already transformed their workflow</p>
+                <button class="mega-cta-btn">Start Your Free Trial</button>
+                <p class="cta-note">No credit card required • 14-day free trial • Cancel anytime</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Claude<span class="accent">Code</span></h3>
+                    <p>The future of coding is here</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <ul>
+                            <li><a href="#">Features</a></li>
+                            <li><a href="#">Pricing</a></li>
+                            <li><a href="#">Documentation</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">Careers</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="#">Help Center</a></li>
+                            <li><a href="#">Community</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Claude Code. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
