@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI生成クイズゲーム</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .genre-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .genre-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .genre-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .genre-card.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .quiz-section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-box {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .question {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .answers {
+            display: grid;
+            gap: 15px;
+        }
+
+        .answer-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px 20px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+        }
+
+        .answer-btn:hover:not(.disabled) {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .answer-btn.selected {
+            border-color: #667eea;
+            background: #e0e7ff;
+        }
+
+        .answer-btn.correct {
+            border-color: #10b981;
+            background: #d1fae5;
+        }
+
+        .answer-btn.incorrect {
+            border-color: #ef4444;
+            background: #fee2e2;
+        }
+
+        .answer-btn.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e0f2fe;
+            border-radius: 10px;
+            border-left: 4px solid #0284c7;
+            min-height: 80px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .explanation.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 18px;
+            margin: 20px 0;
+            color: #555;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 600px) {
+            .genre-selector {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+            }
+        }
+
+        .result-section {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .result-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .result-score {
+            font-size: 48px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 20px 0;
+        }
+
+        .result-message {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+        }
+
+        .quiz-counter {
+            text-align: center;
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>🎮 AIクイズゲーム 🤖</h1>
+        
+        <!-- ジャンル選択 -->
+        <div id="genreSection">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #555;">ジャンルを選んでください</h2>
+            <div class="genre-selector">
+                <div class="genre-card" data-genre="science">
+                    <span style="font-size: 24px;">🔬</span>
+                    <span>科学</span>
+                </div>
+                <div class="genre-card" data-genre="history">
+                    <span style="font-size: 24px;">📚</span>
+                    <span>歴史</span>
+                </div>
+                <div class="genre-card" data-genre="geography">
+                    <span style="font-size: 24px;">🌍</span>
+                    <span>地理</span>
+                </div>
+                <div class="genre-card" data-genre="sports">
+                    <span style="font-size: 24px;">⚽</span>
+                    <span>スポーツ</span>
+                </div>
+                <div class="genre-card" data-genre="entertainment">
+                    <span style="font-size: 24px;">🎬</span>
+                    <span>エンタメ</span>
+                </div>
+                <div class="genre-card" data-genre="technology">
+                    <span style="font-size: 24px;">💻</span>
+                    <span>テクノロジー</span>
+                </div>
+            </div>
+            <div class="controls">
+                <button class="btn btn-primary" onclick="startGame()" id="startBtn" disabled>ゲーム開始</button>
+            </div>
+        </div>
+
+        <!-- クイズセクション -->
+        <div class="quiz-section" id="quizSection">
+            <div class="quiz-counter" id="quizCounter">問題 1 / 5</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 20%"></div>
+            </div>
+            <div class="question-box">
+                <div class="question" id="questionText">
+                    問題を生成中...<span class="loading"></span>
+                </div>
+                <div class="answers" id="answersContainer"></div>
+                <div class="explanation" id="explanation"></div>
+            </div>
+            <div class="score-display">
+                スコア: <span id="currentScore">0</span> / <span id="totalQuestions">5</span>
+            </div>
+            <div class="controls">
+                <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn" style="display: none;">次の問題</button>
+                <button class="btn btn-secondary" onclick="resetGame()">最初に戻る</button>
+            </div>
+        </div>
+
+        <!-- 結果表示 -->
+        <div class="result-section" id="resultSection">
+            <h2 class="result-title">🎉 ゲーム終了！ 🎉</h2>
+            <div class="result-score" id="finalScore">5 / 5</div>
+            <div class="result-message" id="resultMessage">素晴らしい成績です！</div>
+            <div class="controls">
+                <button class="btn btn-primary" onclick="resetGame()">もう一度プレイ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ゲーム設定
+        const gameConfig = {
+            apiEndpoint: 'https://mocha.ai-sample.net/v1/chat/completions',
+            apiKey: '', // ここにAPIキーを設定（本番環境では環境変数を使用）
+            totalQuestions: 5,
+            demoMode: false
+        };
+
+        // ゲーム状態
+        let gameState = {
+            selectedGenre: null,
+            currentQuestion: 0,
+            score: 0,
+            quizzes: [],
+            userAnswers: [],
+            isAnswered: false
+        };
+
+        // ジャンルカードの選択
+        document.querySelectorAll('.genre-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.genre-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                gameState.selectedGenre = this.dataset.genre;
+                document.getElementById('startBtn').disabled = false;
+            });
+        });
+
+        // ゲーム開始
+        async function startGame() {
+            if (!gameState.selectedGenre) {
+                alert('ジャンルを選択してください');
+                return;
+            }
+
+            // UIの初期化（前回の結果をクリア）
+            document.getElementById('questionText').innerHTML = `${gameConfig.totalQuestions}問分のクイズを生成中...<span class="loading"></span>`;
+            document.getElementById('answersContainer').innerHTML = '';
+            document.getElementById('explanation').innerHTML = '';
+            document.getElementById('explanation').classList.remove('show');
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('progressFill').style.width = '20%';
+            document.getElementById('currentScore').textContent = '0';
+            document.getElementById('totalQuestions').textContent = gameConfig.totalQuestions;
+            
+            // UIの切り替え
+            document.getElementById('genreSection').style.display = 'none';
+            document.getElementById('quizSection').style.display = 'block';
+            document.getElementById('resultSection').style.display = 'none';
+            
+            // ゲーム状態をリセット
+            gameState.currentQuestion = 0;
+            gameState.score = 0;
+            gameState.quizzes = [];
+            gameState.userAnswers = [];
+            gameState.isAnswered = false;
+            
+            // 問題を生成
+            await generateAllQuizzes();
+            
+            // 最初の問題を表示
+            if (gameState.quizzes.length > 0) {
+                displayQuestion();
+            }
+        }
+
+        // 全問題を一括生成
+        async function generateAllQuizzes() {
+            const questionText = document.getElementById('questionText');
+            questionText.innerHTML = `${gameConfig.totalQuestions}問分のクイズを生成中...<span class="loading"></span>`;
+            
+            const genreNames = {
+                'science': '科学',
+                'history': '歴史',
+                'geography': '地理',
+                'sports': 'スポーツ',
+                'entertainment': 'エンターテインメント',
+                'technology': 'テクノロジー'
+            };
+            
+            const selectedGenreName = genreNames[gameState.selectedGenre];
+            
+            try {
+                const headers = {
+                    'Content-Type': 'application/json',
+                };
+                
+                // APIキーが設定されている場合は追加
+                if (gameConfig.apiKey) {
+                    headers['X-API-Key'] = gameConfig.apiKey;
+                }
+                
+                const response = await fetch(gameConfig.apiEndpoint, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: [
+                            {
+                                role: 'system',
+                                content: 'あなたは日本語のクイズを生成するAIです。指定されたジャンルに関する興味深い日本語のクイズを作成してください。必ず指定されたJSON形式で、すべて日本語で返答してください。'
+                            },
+                            {
+                                role: 'user',
+                                content: `${selectedGenreName}に関する日本語のクイズを${gameConfig.totalQuestions}問作成してください。
+                                
+以下のJSON形式で返してください。他の文章は一切含めないでください：
+[
+  {
+    "question": "日本語の問題文",
+    "choices": ["日本語の選択肢1", "日本語の選択肢2", "日本語の選択肢3", "日本語の選択肢4"],
+    "correct": 0,
+    "explanation": "日本語の解説文"
+  }
+]
+
+注意：
+- すべて日本語で作成すること
+- correctは正解の選択肢のインデックス（0-3）
+- 問題は徐々に難しくなるようにする
+- 各問題は異なる内容にする
+- 一般的な知識で答えられる問題にする`
+                            }
+                        ],
+                        temperature: 0.8,
+                        max_tokens: 2000
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+
+                const data = await response.json();
+                const content = data.choices[0].message.content;
+                
+                // JSONをパース
+                const quizzes = JSON.parse(content);
+                
+                if (Array.isArray(quizzes) && quizzes.length > 0) {
+                    gameState.quizzes = quizzes.slice(0, gameConfig.totalQuestions);
+                } else {
+                    throw new Error('Invalid quiz format');
+                }
+                
+            } catch (error) {
+                console.error('Error generating quizzes:', error);
+                // デモデータを使用
+                gameState.quizzes = generateDemoQuizzes();
+            }
+        }
+
+        // デモクイズ生成
+        function generateDemoQuizzes() {
+            const demoQuizzes = {
+                science: [
+                    {
+                        question: "水の化学式は何ですか？",
+                        choices: ["H2O", "CO2", "O2", "N2"],
+                        correct: 0,
+                        explanation: "水の化学式はH2O（エイチツーオー）です。水素原子2つと酸素原子1つから構成されています。"
+                    },
+                    {
+                        question: "太陽系で最も大きい惑星は？",
+                        choices: ["地球", "火星", "木星", "土星"],
+                        correct: 2,
+                        explanation: "木星は太陽系最大の惑星で、地球の約11倍の直径があります。"
+                    },
+                    {
+                        question: "光の速度は秒速約何キロメートル？",
+                        choices: ["30万km", "100万km", "10万km", "3万km"],
+                        correct: 0,
+                        explanation: "光の速度は真空中で秒速約30万キロメートル（正確には299,792,458m/s）です。"
+                    },
+                    {
+                        question: "DNAの正式名称は？",
+                        choices: ["デオキシリボ核酸", "リボ核酸", "アミノ酸", "タンパク質"],
+                        correct: 0,
+                        explanation: "DNAの正式名称はデオキシリボ核酸（Deoxyribonucleic Acid）です。"
+                    },
+                    {
+                        question: "絶対零度は摂氏何度？",
+                        choices: ["-273.15℃", "-100℃", "-459.67℃", "0℃"],
+                        correct: 0,
+                        explanation: "絶対零度は-273.15℃で、理論上これ以下の温度は存在しません。"
+                    }
+                ],
+                history: [
+                    {
+                        question: "日本で最初の女性天皇は？",
+                        choices: ["推古天皇", "持統天皇", "元明天皇", "元正天皇"],
+                        correct: 0,
+                        explanation: "推古天皇（592-628年在位）は日本史上初の女性天皇です。"
+                    }
+                ],
+                geography: [
+                    {
+                        question: "世界で最も深い海溝は？",
+                        choices: ["マリアナ海溝", "日本海溝", "フィリピン海溝", "トンガ海溝"],
+                        correct: 0,
+                        explanation: "マリアナ海溝の最深部（チャレンジャー海淵）は約11,000mの深さがあります。"
+                    }
+                ],
+                sports: [
+                    {
+                        question: "オリンピックの五輪の色に含まれないのは？",
+                        choices: ["紫", "青", "黄", "緑"],
+                        correct: 0,
+                        explanation: "オリンピックの五輪の色は青・黄・黒・緑・赤の5色です。"
+                    }
+                ],
+                entertainment: [
+                    {
+                        question: "アカデミー賞の正式名称は？",
+                        choices: ["オスカー", "Academy Awards", "Golden Awards", "Film Awards"],
+                        correct: 1,
+                        explanation: "正式名称はAcademy Awardsで、オスカーは愛称です。"
+                    }
+                ],
+                technology: [
+                    {
+                        question: "インターネットの前身となったネットワークは？",
+                        choices: ["ARPANET", "ETHERNET", "INTRANET", "TELNET"],
+                        correct: 0,
+                        explanation: "ARPANETは1969年に開発された、インターネットの前身となったネットワークです。"
+                    }
+                ]
+            };
+            
+            const genre = gameState.selectedGenre;
+            const quizzes = demoQuizzes[genre] || demoQuizzes.science;
+            
+            // 5問になるまで繰り返す
+            while (quizzes.length < gameConfig.totalQuestions) {
+                quizzes.push(quizzes[0]);
+            }
+            
+            return quizzes.slice(0, gameConfig.totalQuestions);
+        }
+
+        // 問題を表示
+        function displayQuestion() {
+            const quiz = gameState.quizzes[gameState.currentQuestion];
+            
+            // カウンター更新
+            document.getElementById('quizCounter').textContent = 
+                `問題 ${gameState.currentQuestion + 1} / ${gameConfig.totalQuestions}`;
+            
+            // プログレスバー更新
+            const progress = ((gameState.currentQuestion + 1) / gameConfig.totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            
+            // 問題文表示
+            document.getElementById('questionText').textContent = quiz.question;
+            
+            // 選択肢表示
+            const answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML = '';
+            
+            quiz.choices.forEach((choice, index) => {
+                const button = document.createElement('button');
+                button.className = 'answer-btn';
+                button.textContent = choice;
+                button.onclick = () => selectAnswer(index);
+                answersContainer.appendChild(button);
+            });
+            
+            // 解説をリセット（非表示にするが、スペースは確保）
+            const explanationDiv = document.getElementById('explanation');
+            explanationDiv.classList.remove('show');
+            explanationDiv.innerHTML = '';
+            
+            document.getElementById('nextBtn').style.display = 'none';
+            
+            // スコア更新
+            document.getElementById('currentScore').textContent = gameState.score;
+            document.getElementById('totalQuestions').textContent = gameConfig.totalQuestions;
+            
+            gameState.isAnswered = false;
+        }
+
+        // 回答を選択
+        function selectAnswer(index) {
+            if (gameState.isAnswered) return;
+            
+            gameState.isAnswered = true;
+            const quiz = gameState.quizzes[gameState.currentQuestion];
+            const isCorrect = index === quiz.correct;
+            
+            // ユーザーの回答を保存
+            gameState.userAnswers.push(index);
+            
+            // 正誤判定
+            if (isCorrect) {
+                gameState.score++;
+            }
+            
+            // ボタンの状態を更新
+            const buttons = document.querySelectorAll('.answer-btn');
+            buttons.forEach((btn, i) => {
+                btn.classList.add('disabled');
+                if (i === index) {
+                    btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+                }
+                if (i === quiz.correct) {
+                    btn.classList.add('correct');
+                }
+            });
+            
+            // 解説を表示（フェードインアニメーション）
+            const explanationDiv = document.getElementById('explanation');
+            explanationDiv.innerHTML = `
+                <strong>${isCorrect ? '✅ 正解！' : '❌ 不正解'}</strong><br>
+                ${quiz.explanation}
+            `;
+            explanationDiv.classList.add('show');
+            
+            // スコア更新
+            document.getElementById('currentScore').textContent = gameState.score;
+            
+            // 次へボタンを表示
+            if (gameState.currentQuestion < gameConfig.totalQuestions - 1) {
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            } else {
+                // 最後の問題の場合、少し待ってから結果表示
+                setTimeout(showResult, 2000);
+            }
+        }
+
+        // 次の問題へ
+        function nextQuestion() {
+            gameState.currentQuestion++;
+            displayQuestion();
+        }
+
+        // 結果を表示
+        function showResult() {
+            document.getElementById('quizSection').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'block';
+            
+            const percentage = (gameState.score / gameConfig.totalQuestions) * 100;
+            document.getElementById('finalScore').textContent = 
+                `${gameState.score} / ${gameConfig.totalQuestions}`;
+            
+            let message = '';
+            if (percentage === 100) {
+                message = '🏆 パーフェクト！素晴らしい成績です！';
+            } else if (percentage >= 80) {
+                message = '🎉 素晴らしい！よくできました！';
+            } else if (percentage >= 60) {
+                message = '👍 良い成績です！';
+            } else if (percentage >= 40) {
+                message = '💪 もう少し頑張りましょう！';
+            } else {
+                message = '📚 復習してもう一度チャレンジ！';
+            }
+            
+            document.getElementById('resultMessage').textContent = message;
+        }
+
+        // ゲームをリセット
+        function resetGame() {
+            // ゲーム状態をリセット
+            gameState = {
+                selectedGenre: null,
+                currentQuestion: 0,
+                score: 0,
+                quizzes: [],
+                userAnswers: [],
+                isAnswered: false
+            };
+            
+            // UIをリセット
+            document.getElementById('genreSection').style.display = 'block';
+            document.getElementById('quizSection').style.display = 'none';
+            document.getElementById('resultSection').style.display = 'none';
+            document.getElementById('startBtn').disabled = true;
+            
+            // 解説エリアをリセット
+            const explanationDiv = document.getElementById('explanation');
+            explanationDiv.classList.remove('show');
+            explanationDiv.innerHTML = '';
+            
+            // ジャンル選択をリセット
+            document.querySelectorAll('.genre-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // プログレスバーをリセット
+            document.getElementById('progressFill').style.width = '20%';
+            
+            // スコア表示をリセット
+            document.getElementById('currentScore').textContent = '0';
+            document.getElementById('totalQuestions').textContent = '5';
+            
+            // 次へボタンを非表示
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
