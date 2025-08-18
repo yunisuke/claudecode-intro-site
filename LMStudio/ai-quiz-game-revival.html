@@ -278,11 +278,32 @@
             margin-bottom: 15px;
             font-size: 14px;
         }
+        
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+            display: none;
+            border: 2px solid #fca5a5;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div class="game-container">
         <h1>🎮 AIクイズゲーム 🤖</h1>
+        
+        <!-- エラーメッセージ -->
+        <div class="error-message" id="errorMessage">
+            ⚠️ サーバーが起動していません
+        </div>
         
         <!-- ジャンル選択 -->
         <div id="genreSection">
@@ -370,18 +391,34 @@
             isAnswered: false
         };
 
+        // サーバーの状態を保持
+        let serverAvailable = false;
+
         // ジャンルカードの選択
-        document.querySelectorAll('.genre-card').forEach(card => {
-            card.addEventListener('click', function() {
-                document.querySelectorAll('.genre-card').forEach(c => c.classList.remove('selected'));
-                this.classList.add('selected');
-                gameState.selectedGenre = this.dataset.genre;
-                document.getElementById('startBtn').disabled = false;
+        function setupGenreCards() {
+            document.querySelectorAll('.genre-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    // サーバーが利用できない場合は何もしない
+                    if (!serverAvailable) return;
+                    
+                    document.querySelectorAll('.genre-card').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    gameState.selectedGenre = this.dataset.genre;
+                    document.getElementById('startBtn').disabled = false;
+                });
             });
-        });
+        }
+        
+        // 初期設定
+        setupGenreCards();
 
         // ゲーム開始
         async function startGame() {
+            // サーバーが利用できない場合は何もしない
+            if (!serverAvailable) {
+                return;
+            }
+            
             if (!gameState.selectedGenre) {
                 alert('ジャンルを選択してください');
                 return;
@@ -750,6 +787,89 @@
             // 次へボタンを非表示
             document.getElementById('nextBtn').style.display = 'none';
         }
+
+        // ヘルスチェック機能
+        async function checkServerHealth() {
+            try {
+                const headers = {
+                    'Content-Type': 'application/json',
+                };
+                
+                // APIキーが設定されている場合は追加
+                if (gameConfig.apiKey) {
+                    headers['X-API-Key'] = gameConfig.apiKey;
+                }
+                
+                // タイムアウト付きのfetch
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒のタイムアウト
+                
+                const response = await fetch(gameConfig.apiEndpoint, {
+                    method: 'POST',
+                    headers: headers,
+                    signal: controller.signal,
+                    body: JSON.stringify({
+                        model: 'gpt-3.5-turbo',
+                        messages: [
+                            {
+                                role: 'user',
+                                content: 'test'
+                            }
+                        ],
+                        max_tokens: 1
+                    })
+                });
+                
+                clearTimeout(timeoutId);
+                
+                // ステータスコードが200番台または400番台（API自体は動いている）なら成功とみなす
+                if (response.status >= 200 && response.status < 500) {
+                    // サーバーは正常に動作している
+                    serverAvailable = true;
+                    document.getElementById('errorMessage').classList.remove('show');
+                    
+                    // ボタンを有効化
+                    document.querySelectorAll('.genre-card').forEach(card => {
+                        card.style.opacity = '1';
+                        card.style.cursor = 'pointer';
+                    });
+                    
+                    return true;
+                } else {
+                    throw new Error('Server error');
+                }
+                
+            } catch (error) {
+                // エラーが発生した場合（接続エラー、タイムアウトなど）
+                console.error('Server health check failed:', error);
+                serverAvailable = false;
+                document.getElementById('errorMessage').classList.add('show');
+                
+                // ゲーム開始ボタンを無効化
+                document.getElementById('startBtn').disabled = true;
+                
+                // ジャンル選択も無効化
+                document.querySelectorAll('.genre-card').forEach(card => {
+                    card.style.opacity = '0.5';
+                    card.style.cursor = 'not-allowed';
+                });
+                
+                return false;
+            }
+        }
+
+        // ページ読み込み時にヘルスチェックを実行
+        window.addEventListener('DOMContentLoaded', () => {
+            // 初期状態ですべてのボタンを無効化
+            document.getElementById('startBtn').disabled = true;
+            document.querySelectorAll('.genre-card').forEach(card => {
+                card.style.opacity = '0.5';
+                card.style.cursor = 'not-allowed';
+            });
+            
+            // ヘルスチェックを実行
+            checkServerHealth();
+        });
     </script>
 </body>
 </html>
