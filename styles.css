@@ -32,8 +32,8 @@ body::before {
 }
 
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
+    /* max-width: 1200px; 削除してフル幅に */
+    /* margin: 0 auto; 削除 */
     position: relative;
     z-index: 1;
 }
@@ -41,10 +41,10 @@ body::before {
 
 /* ClaudeCode紹介セクション */
 .features-section {
-    padding: 100px 20px;
-    background: rgba(10, 10, 20, 0.6);
-    backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(45, 212, 191, 0.05);
+    padding: 60px 20px;
+    /* background: rgba(10, 10, 20, 0.6); 削除 */
+    /* backdrop-filter: blur(20px) saturate(180%); 削除 */
+    /* border: 1px solid rgba(45, 212, 191, 0.05); 削除 */
     position: relative;
     overflow: hidden;
 }
@@ -175,10 +175,11 @@ body::before {
 
 .usage-examples {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 40px;
-    max-width: 1200px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    /* max-width: 1200px; 削除してフル幅に */
     margin: 0 auto;
+    padding: 0 10px;
     opacity: 0;
     animation: fadeInUp 0.8s ease forwards;
     animation-delay: 0.5s;
@@ -186,8 +187,8 @@ body::before {
 
 .example-card {
     background: rgba(15, 15, 25, 0.6);
-    padding: 35px;
-    border-radius: 20px;
+    padding: 25px;
+    border-radius: 15px;
     box-shadow: 
         0 8px 32px rgba(0, 0, 0, 0.4),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -429,7 +430,7 @@ body::before {
 /* レスポンシブデザイン */
 @media (max-width: 768px) {
     .features-section {
-        padding: 40px 15px;
+        padding: 30px 10px;
     }
     
     .features-section h2 {
@@ -439,15 +440,17 @@ body::before {
     .intro {
         font-size: 1rem;
         margin-bottom: 30px;
+        padding: 0 10px;
     }
     
     .usage-examples {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 15px;
+        padding: 0 5px;
     }
     
     .example-card {
-        padding: 25px;
+        padding: 20px;
     }
     
     .example-card h4 {
@@ -533,10 +536,10 @@ body::before {
 
 /* 詳細セクション */
 .detail-section {
-    background: rgba(15, 23, 42, 0.8);
-    padding: 80px 20px;
-    margin-top: 80px;
-    border-top: 1px solid rgba(45, 212, 191, 0.2);
+    /* background: rgba(15, 23, 42, 0.8); 削除 */
+    padding: 60px 20px;
+    margin-top: 60px;
+    /* border-top: 1px solid rgba(45, 212, 191, 0.2); 削除 */
 }
 
 .detail-content {
@@ -561,13 +564,13 @@ body::before {
 }
 
 .detail-box {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%);
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(45, 212, 191, 0.1);
+    /* background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%); 削除 */
+    padding: 20px;
+    /* border-radius: 15px; 削除 */
+    /* box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); 削除 */
+    /* border: 1px solid rgba(45, 212, 191, 0.1); 削除 */
     min-height: 200px;
-    backdrop-filter: blur(10px);
+    /* backdrop-filter: blur(10px); 削除 */
 }
 
 .detail-box p {
@@ -649,17 +652,19 @@ body::before {
 .strength, .weakness {
     padding: 20px;
     border-radius: 10px;
-    border: 2px solid;
+    /* border: 2px solid; 削除 */
 }
 
 .strength {
     background-color: #f0f9ff;
-    border-color: #22c55e;
+    /* border-color: #22c55e; 削除 */
+    border-left: 4px solid #22c55e;
 }
 
 .weakness {
     background-color: #fef3f2;
-    border-color: #ef4444;
+    /* border-color: #ef4444; 削除 */
+    border-left: 4px solid #ef4444;
 }
 
 .strength h6, .weakness h6 {
@@ -797,8 +802,8 @@ body::before {
     }
     
     .detail-section {
-        padding: 40px 15px;
-        margin-top: 40px;
+        padding: 30px 15px;
+        margin-top: 30px;
     }
     
     .detail-content h3 {
@@ -806,7 +811,7 @@ body::before {
     }
     
     .detail-box {
-        padding: 25px;
+        padding: 15px;
     }
     
     .strength-weakness {
