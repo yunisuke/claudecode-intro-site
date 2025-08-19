@@ -30,31 +30,37 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(card);
     });
 
-    // 詳細リンクのスムーススクロール
+    // 詳細リンクのスムーススクロール（内部アンカーリンクのみ）
     const detailLinks = document.querySelectorAll('.detail-link');
     detailLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href').substring(1);
-            const targetElement = document.getElementById(targetId);
+            const href = this.getAttribute('href');
             
-            if (targetElement) {
-                // 親要素（detail-section）までの絶対位置を取得
-                const rect = targetElement.getBoundingClientRect();
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                const offsetTop = rect.top + scrollTop - 100; // 100pxの余白を設定
+            // #で始まる内部アンカーリンクの場合のみスムーススクロール
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                const targetId = href.substring(1);
+                const targetElement = document.getElementById(targetId);
                 
-                // スムーススクロール
-                window.scrollTo({
-                    top: offsetTop,
-                    behavior: 'smooth'
-                });
-                
-                // 詳細コンテンツをフェードイン
-                setTimeout(() => {
-                    targetElement.classList.add('visible');
-                }, 300);
+                if (targetElement) {
+                    // 親要素（detail-section）までの絶対位置を取得
+                    const rect = targetElement.getBoundingClientRect();
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    const offsetTop = rect.top + scrollTop - 100; // 100pxの余白を設定
+                    
+                    // スムーススクロール
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                    
+                    // 詳細コンテンツをフェードイン
+                    setTimeout(() => {
+                        targetElement.classList.add('visible');
+                    }, 300);
+                }
             }
+            // 外部リンクの場合は通常のページ遷移を許可（e.preventDefault()しない）
         });
     });
     
