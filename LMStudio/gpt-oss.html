@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT-OSS (LMStudio) プロジェクト</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+            transform: translateX(-5px);
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+
+        .intro-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .intro-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .intro-section p {
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .feature-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .tech-stack {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .tech-stack h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .tech-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .tech-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .tech-item:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .demo-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .demo-section h2 {
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+
+        .demo-section p {
+            margin-bottom: 30px;
+            font-size: 18px;
+            opacity: 0.95;
+        }
+
+        .demo-button {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .requirements {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .requirements h2 {
+            color: #856404;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .requirements ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .requirements li {
+            color: #856404;
+            margin-bottom: 10px;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .requirements li:before {
+            content: "⚠️";
+            position: absolute;
+            left: 0;
+        }
+
+        .implementation-details {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .implementation-details h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .implementation-details h3 {
+            color: #555;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .implementation-details p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 32px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">← トップページに戻る</a>
+        
+        <h1>🤖 GPT-OSS × LMStudio</h1>
+        <p class="subtitle">ローカルAIで動くインタラクティブクイズゲーム</p>
+
+        <div class="intro-section">
+            <h2>プロジェクト概要</h2>
+            <p>
+                このプロジェクトは、LMStudioを使用してローカル環境でGPTモデルを動かし、
+                完全にオフラインで動作するAIクイズゲームを実現したものです。
+            </p>
+            <p>
+                外部APIに依存せず、プライバシーを保護しながら高品質なAI体験を提供することを目的としています。
+                ClaudeCodeを使用して開発し、AIによるクイズ生成機能を実装しました。
+            </p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>🔒 完全ローカル動作</h3>
+                <p>すべての処理がローカル環境で完結。インターネット接続不要で、データが外部に送信されることはありません。</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎯 6つのジャンル</h3>
+                <p>科学、歴史、地理、スポーツ、エンターテインメント、テクノロジーの6つのジャンルから選択可能。</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎮 インタラクティブUI</h3>
+                <p>美しいグラデーションと滑らかなアニメーションで、快適なゲーム体験を提供。</p>
+            </div>
+            <div class="feature-card">
+                <h3>📊 スコア機能</h3>
+                <p>各問題の正誤判定とスコア集計。最終結果に応じたメッセージ表示。</p>
+            </div>
+            <div class="feature-card">
+                <h3>💡 解説機能</h3>
+                <p>各問題の回答後に詳細な解説を表示。学習効果を高めます。</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔄 ヘルスチェック</h3>
+                <p>起動時にサーバーの状態を自動確認。エラー時は分かりやすく通知。</p>
+            </div>
+        </div>
+
+        <div class="tech-stack">
+            <h2>技術スタック</h2>
+            <div class="tech-list">
+                <div class="tech-item">
+                    <strong>LMStudio</strong>
+                    <p>ローカルLLM実行環境</p>
+                </div>
+                <div class="tech-item">
+                    <strong>GPT-3.5互換API</strong>
+                    <p>OpenAI互換エンドポイント</p>
+                </div>
+                <div class="tech-item">
+                    <strong>HTML5/CSS3</strong>
+                    <p>レスポンシブデザイン</p>
+                </div>
+                <div class="tech-item">
+                    <strong>Vanilla JavaScript</strong>
+                    <p>フレームワーク不使用</p>
+                </div>
+                <div class="tech-item">
+                    <strong>Async/Await</strong>
+                    <p>非同期処理</p>
+                </div>
+                <div class="tech-item">
+                    <strong>Fetch API</strong>
+                    <p>HTTP通信</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="requirements">
+            <h2>動作要件</h2>
+            <ul>
+                <li>LMStudioがインストールされていること</li>
+                <li>GPT互換モデルがダウンロード済みであること</li>
+                <li>LMStudioのローカルサーバーが起動していること（デフォルト: http://localhost:1234）</li>
+                <li>モダンブラウザ（Chrome、Firefox、Safari、Edge等）</li>
+            </ul>
+        </div>
+
+        <div class="demo-section">
+            <h2>🎮 デモを試してみる</h2>
+            <p>実際にAIクイズゲームをプレイして、ローカルAIの威力を体験してください！</p>
+            <a href="ai-quiz-game-revival.html" class="demo-button">ゲームをプレイする →</a>
+        </div>
+
+        <div class="implementation-details">
+            <h2>実装の詳細</h2>
+            
+            <h3>💡 やってみたかったこと</h3>
+            <p>
+                外部サービスに依存せず、完全にローカル環境で動作するAIアプリケーションの可能性を探求したかった。
+                特に、プライバシー重視のユーザーや、オフライン環境での利用を想定したシステムの構築を目指しました。
+            </p>
+
+            <h3>✅ 確認できたこと</h3>
+            <p>
+                LMStudioとローカルLLMの組み合わせにより、外部APIと遜色ない品質のAI体験を提供できることを確認しました。
+                レスポンス速度はハードウェアに依存しますが、適切なモデル選択により実用的な速度を実現できます。
+            </p>
+            <p>
+                また、ヘルスチェック機能により、サーバーの状態を適切にハンドリングし、
+                ユーザーフレンドリーなエラー処理を実装できることも確認できました。
+            </p>
+
+            <h3>🚀 今後の展望</h3>
+            <p>
+                - 問題の難易度調整機能の追加<br>
+                - 複数人対戦モードの実装<br>
+                - カスタムモデルの切り替え機能<br>
+                - 問題履歴の保存とリプレイ機能<br>
+                - より高度なプロンプトエンジニアリングによる問題品質の向上
+            </p>
+
+            <h3>📝 エンドポイント設定</h3>
+            <div class="code-block">
+// デフォルト設定
+const gameConfig = {
+    apiEndpoint: 'https://mocha.ai-sample.net/v1/chat/completions',
+    // ローカル環境の場合は以下に変更
+    // apiEndpoint: 'http://localhost:1234/v1/chat/completions',
+    totalQuestions: 5,
+    demoMode: false
+};
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #e0e0e0;">
+            <p style="color: #999;">ClaudeCodeで制作 | GPT-OSS × LMStudio Project</p>
+        </div>
+    </div>
+</body>
+</html>
