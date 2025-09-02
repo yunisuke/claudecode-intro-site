@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Codex — コードに最短距離で到達するエージェント</title>
+    <meta name="description" content="Codex CLIは、計画・実行・パッチ適用を自動化するターミナルネイティブなコーディングエージェントです。素早く、安全に、賢く。" />
+    <meta name="theme-color" content="#0b0f16" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+
+    <meta property="og:title" content="Codex — コードに最短距離で到達するエージェント" />
+    <meta property="og:description" content="計画・実行・パッチ適用を自動化。ターミナルに宿る相棒。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="" />
+    <meta property="og:image" content="" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b0f16'/%3E%3Cpath d='M16 20h32v4H16zM16 30h24v4H16zM16 40h18v4H16z' fill='%23b1c2ff'/%3E%3C/svg%3E" />
+
+    <link rel="preload" href="assets/css/styles.css" as="style" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <script defer src="assets/js/main.js"></script>
+    <script defer src="assets/js/invaders.js"></script>
+  </head>
+  <body>
+    <div class="bg">
+      <div class="bg-gradient" aria-hidden="true"></div>
+      <svg class="bg-noise" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <filter id="noiseFilter">
+          <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch" />
+          <feColorMatrix type="saturate" values="0" />
+          <feComponentTransfer>
+            <feFuncA type="table" tableValues="0 0 0 0.08"/>
+          </feComponentTransfer>
+        </filter>
+        <rect width="100" height="100" filter="url(#noiseFilter)" />
+      </svg>
+    </div>
+
+    <header class="site-header container">
+      <a class="logo" href="#">Codex</a>
+      <nav class="nav">
+        <a href="#features">Features</a>
+        <a href="#demo">Demo</a>
+        <a href="#play">Play</a>
+        <a href="#quickstart">Quickstart</a>
+        <button class="theme-toggle" title="テーマ切替" aria-label="テーマ切替">
+          <span class="icon-moon" aria-hidden="true"></span>
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero container">
+        <div class="hero-content">
+          <p class="eyebrow">Terminal-native • Agentic • Patch-first</p>
+          <h1>
+            コードに<span class="accent">最短距離</span>で到達する<br />
+            コーディングエージェント
+          </h1>
+          <p class="subtitle">
+            Codexは、計画→実行→検証→パッチ適用を一気通貫でこなす、CLIに最適化されたコーディングエージェント。<br class="br-hide-mobile"/>あなたの開発フローに静かに溶け込み、スピードと安心を両立します。
+          </p>
+          <div class="cta-group">
+            <a class="btn btn-primary" href="#demo">デモを見る</a>
+            <a class="btn btn-ghost" href="#quickstart">最速で始める</a>
+          </div>
+          <div class="badges">
+            <span class="badge">Open Source</span>
+            <span class="badge">CLI-first</span>
+            <span class="badge">Zero Config</span>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="orb orb-a"></div>
+          <div class="orb orb-b"></div>
+          <div class="glass hero-card">
+            <div class="hero-status">
+              <span class="dot"></span> plan-sync active
+            </div>
+            <pre class="code"><code id="hero-code">$ codex plan
+1. スキャフォールドを作成
+2. 機能を実装
+3. テストを実行
+4. パッチを適用
+
+$ codex apply --safe
+✔ 変更を検証しました
+✔ パッチを適用しました
+✨ 完了: 12.4s</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="features container reveal">
+        <h2>なぜ <span class="accent">Codex</span> なのか</h2>
+        <p class="section-sub">高速・安全・省認知負荷。開発者の思考に寄り添う設計。</p>
+        <div class="grid">
+          <article class="card glass">
+            <div class="icon">🧭</div>
+            <h3>プラン駆動</h3>
+            <p>明示的なステップ計画で迷走を防止。実行状況を常に同期。</p>
+          </article>
+          <article class="card glass">
+            <div class="icon">🛡️</div>
+            <h3>安全第一</h3>
+            <p>パッチ適用と差分表示を標準化。副作用の少ない変更に集中。</p>
+          </article>
+          <article class="card glass">
+            <div class="icon">⚡</div>
+            <h3>爆速フィードバック</h3>
+            <p>テストとビルドを近接実行。小さく回して大きく進む。</p>
+          </article>
+          <article class="card glass">
+            <div class="icon">🧩</div>
+            <h3>ツール連携</h3>
+            <p>CLI・VCS・フォーマッタと密結合。あなたの流儀を保つ。</p>
+          </article>
+          <article class="card glass">
+            <div class="icon">🌘</div>
+            <h3>美しいUI</h3>
+            <p>ガラス質感と流体グラデーション。暗/明テーマに対応。</p>
+          </article>
+          <article class="card glass">
+            <div class="icon">🧪</div>
+            <h3>検証ファースト</h3>
+            <p>小さくテストし、大胆に変更。自信を持って前へ。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="demo" class="demo container reveal">
+        <div class="demo-head">
+          <h2>ターミナルで<span class="accent">動く</span>相棒</h2>
+          <p class="section-sub">タイプしている間に進む。待たせない、外さない。</p>
+        </div>
+
+        <div class="terminal glass" role="region" aria-label="Codex demo terminal">
+          <div class="terminal-bar">
+            <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+            <span class="title">codex — demo</span>
+            <button id="demo-replay" class="btn btn-ghost sm">Replay</button>
+          </div>
+          <pre class="terminal-body" id="terminal"></pre>
+        </div>
+
+        <div class="code-slab glass">
+          <div class="slab-head">
+            <span>Patch preview</span>
+            <button class="btn btn-ghost sm" data-copy="#patch">Copy</button>
+          </div>
+          <pre class="code"><code id="patch">Update File: src/app.py
+@@
+- def example():
+-     pass
++ def example():
++     return 123</code></pre>
+        </div>
+      </section>
+
+      <section id="play" class="play container reveal">
+        <div class="demo-head">
+          <h2>Invaders: <span class="accent">Codex</span> Playground</h2>
+          <p class="section-sub">← → / A D で移動、Spaceでショット。Pで一時停止。</p>
+        </div>
+
+        <div class="game glass">
+          <div class="hud">
+            <div class="hud-left">
+              <span>Score: <b id="iv-score">0</b></span>
+              <span>Lives: <b id="iv-lives">3</b></span>
+              <span>Level: <b id="iv-level">1</b></span>
+            </div>
+            <div class="hud-right">
+              <button id="iv-btn" class="btn btn-primary sm">Start</button>
+            </div>
+          </div>
+          <canvas id="invaders" aria-label="Space Invaders mini game"></canvas>
+          <div class="hint">Controls: ← → / A D ・ Space / P</div>
+        </div>
+      </section>
+
+      <section id="quickstart" class="quickstart container reveal">
+        <h2>最速で<span class="accent">始める</span></h2>
+        <ol class="steps">
+          <li>
+            <div class="step-title">インストール</div>
+            <pre class="code"><code>npm i -g codex-cli</code></pre>
+          </li>
+          <li>
+            <div class="step-title">プロジェクトで起動</div>
+            <pre class="code"><code>codex init
+codex run</code></pre>
+          </li>
+          <li>
+            <div class="step-title">安全に適用</div>
+            <pre class="code"><code>codex apply --safe</code></pre>
+          </li>
+        </ol>
+        <div class="cta-group">
+          <a class="btn btn-primary" href="#">GitHub</a>
+          <a class="btn btn-ghost" href="#">ドキュメント</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer container">
+      <div class="logo">Codex</div>
+      <div class="foot-meta">
+        <span>© <span id="y"></span> Codex CLI</span>
+        <span>Built with love for the terminal</span>
+      </div>
+    </footer>
+  </body>
+  </html>

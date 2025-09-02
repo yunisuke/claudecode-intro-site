@@ -1,0 +1,176 @@
+:root {
+    --primary-font: 'Poppins', sans-serif;
+    --title-font: 'Orbitron', sans-serif;
+    --text-color: #e0e0e0;
+    --bg-color: #0a0a0a;
+    --accent-color-1: #00c6ff;
+    --accent-color-2: #0072ff;
+    --card-bg-color: rgba(255, 255, 255, 0.05);
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--primary-font);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.hero {
+    text-align: center;
+    padding: 8rem 0;
+    /* background is now handled by canvas */
+}
+
+.hero-title {
+    font-family: var(--title-font);
+    font-size: 5rem;
+    letter-spacing: 0.1em;
+    background: linear-gradient(90deg, var(--accent-color-1), var(--accent-color-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    color: #a0a0a0;
+    margin-top: 1rem;
+    min-height: 2.4rem; /* Same as font-size * line-height to prevent layout shift */
+}
+
+.section {
+    padding: 4rem 0;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+}
+
+.section-text {
+    max-width: 700px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.feature-card {
+    background: var(--card-bg-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 0 35px rgba(0, 198, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.feature-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.cta-section {
+    /* No special styles needed */
+}
+
+.cta-button {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--accent-color-1), var(--accent-color-2));
+    color: #fff;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+}
+
+.cta-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px var(--accent-color-2);
+    filter: brightness(1.2);
+}
+
+.footer {
+    text-align: center;
+    padding: 2rem 0;
+    color: #666;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 4rem;
+}
+
+/* --- Animations --- */
+
+/* Initial state for all animated sections */
+.slide-in-from-left, .slide-in-from-right, .animate-on-load {
+    opacity: 0;
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.animate-on-load {
+    transform: translateY(20px);
+}
+
+.slide-in-from-left {
+    transform: translateX(-30px);
+}
+
+.slide-in-from-right {
+    transform: translateX(30px);
+}
+
+/* Visible state */
+.slide-in-from-left.visible, 
+.slide-in-from-right.visible,
+.animate-on-load.visible {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+}
+
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 3.5rem;
+    }
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+    .section-title {
+        font-size: 2rem;
+    }
+}
